@@ -1,0 +1,23 @@
+
+
+class sound
+{
+	float frequency;
+	float amplitude;
+	float phase;
+	float duration;
+
+	float (*waveFunc)(float);
+
+	float attack;
+	float decay;
+	float sustain;
+	float release;
+
+	void sound();
+	float tick(float dt);
+
+	void play();
+	void stop();
+	bool isActive();
+};

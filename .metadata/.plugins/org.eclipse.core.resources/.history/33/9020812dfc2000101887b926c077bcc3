@@ -1,0 +1,7 @@
+#include <vector>
+#include <sound.h>
+
+class player
+{
+	std::vector<Sound> voice;
+};

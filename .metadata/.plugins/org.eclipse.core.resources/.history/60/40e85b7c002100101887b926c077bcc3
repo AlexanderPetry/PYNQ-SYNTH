@@ -1,0 +1,30 @@
+
+
+class sound
+{
+public:
+	float frequency;
+	float amplitude;
+	float phase;
+	float duration;
+
+	float (*waveFunc)(float);
+
+	float attack;
+	float decay;
+	float sustain;
+	float release;
+
+	sound();
+	float tick(float dt);
+
+	void play();
+	void stop();
+	bool isActive();
+
+private:
+    float time = 0.0f;
+    float releaseStart = 0.0f;
+    bool released = false;
+    bool done = false;
+};
