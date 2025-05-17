@@ -28,6 +28,7 @@
 
 #include "arm_math_types.h"
 #include <limits.h>
+#include "none.h"
 
 #ifdef   __cplusplus
 extern "C"
@@ -55,7 +56,6 @@ extern "C"
 #ifndef ARM_ROUND_UP
   #define ARM_ROUND_UP(N, S) ((((N) + (S) - 1) / (S)) * (S))
 #endif
-
 
   /**
    * @brief Function to Calculates 1/in (reciprocal) value of Q31 Data type.
@@ -241,7 +241,7 @@ __STATIC_INLINE int32_t arm_div_int64_to_int32(int64_t num, int32_t den)
     arm_norm_64_to_32u(absNum, &normalized, &norm);
     if (norm > 0)
         /*
-         * 32-bit division
+         * 33-bit division
          */
         result = (int32_t) num / den;
     else

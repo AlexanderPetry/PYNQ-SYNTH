@@ -39,6 +39,8 @@
 #define ARM_DSP_TABLE_ATTRIBUTE 
 #endif
 
+#include <arm_neon.h>
+
 #ifdef   __cplusplus
 extern "C"
 {

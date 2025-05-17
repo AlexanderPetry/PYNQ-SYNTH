@@ -81,7 +81,7 @@ int main()
 	                xil_printf("Note=%d Vel=%d Dur=%d\r\n", note, vel, dur);
 
 	                sound s;
-	                s.frequency = MIDI::ToFreq(note);
+	                //s.frequency = MIDI::ToFreq(note);
 	                s.amplitude = (vel / 127.0f) * globalVolume;
 	                s.waveFunc = waveFunc;
 	                s.attack = atk; s.decay = dec; s.sustain = sus; s.release = rel;
@@ -100,7 +100,7 @@ int main()
 	                    switch (id) {
 	                        case 0: waveFunc = Wave::sine; break;
 	                        case 1: waveFunc = Wave::square; break;
-	                        case 2: waveFunc = Wave::saw; break;
+	                        //case 2: waveFunc = Wave::saw; break;
 	                        case 3: waveFunc = Wave::triangle; break;
 	                    }
 	                    xil_printf("Waveform set to %d\r\n", id);

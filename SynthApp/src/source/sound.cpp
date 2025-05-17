@@ -63,3 +63,23 @@ void sound::stop() {
 bool sound::isActive() {
     return !done;
 }
+
+namespace Wave {
+
+    float sine(float phase, float /*frequency*/, float amplitude){
+
+    }
+
+    float square(float phase, float /*frequency*/, float amplitude){
+
+    }
+
+    float triangle(float phase, float /*frequency*/, float amplitude){
+
+    }
+
+    float sawtooth(float phase, float /*frequency*/, float amplitude){
+
+    }
+}
+

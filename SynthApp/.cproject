@@ -67,11 +67,7 @@
                                 								
                                 <option id="xilinx.gnu.compiler.option.debugging.level.1356435250" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
                                 								
-                                <option id="xilinx.gnu.compiler.inferred.swplatform.includes.598174292" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
-                                    									
-                                    <listOptionValue builtIn="false" value="${resolvePlatformFile:project=SynthApp,fileType=bspInclude}"/>
-                                    								
-                                </option>
+                                <option id="xilinx.gnu.compiler.inferred.swplatform.includes.598174292" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath"/>
                                 								
                                 <option id="xilinx.gnu.compiler.misc.other.1341061597" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -MT&quot;$@&quot; -mcpu=cortex-a9 -mfpu=neon-vfpv3 -mfloat-abi=hard -Wno-narrowing" valueType="string"/>
                                 								
@@ -98,6 +94,10 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/CMSIS_libraries/ComputeLibrary/Include}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/CMSIS_libraries/Include/dsp}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="${resolvePlatformFile:project=SynthApp,fileType=bspInclude}"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/SynthApp/src/include}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -357,9 +357,17 @@
         	
     </storageModule>
     	
+    <storageModule moduleId="refreshScope"/>
+    	
     <storageModule moduleId="scannerConfiguration">
         		
         <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+        		
+        <scannerConfigBuildInfo instanceId="xilinx.gnu.armv7.exe.debug.465323110;xilinx.gnu.armv7.exe.debug.465323110.;xilinx.gnu.armv7.cxx.toolchain.compiler.debug.1618437538;xilinx.gnu.armv7.cxx.compiler.input.401354957">
+            			
+            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMA53X32GCCManagedMakePerProjectProfileC"/>
+            		
+        </scannerConfigBuildInfo>
         		
         <scannerConfigBuildInfo instanceId="xilinx.gnu.armv7.exe.release.820008346;xilinx.gnu.armv7.exe.release.820008346.">
             			
@@ -373,12 +381,6 @@
             		
         </scannerConfigBuildInfo>
         		
-        <scannerConfigBuildInfo instanceId="xilinx.gnu.armv7.exe.debug.465323110;xilinx.gnu.armv7.exe.debug.465323110.;xilinx.gnu.armv7.c.toolchain.compiler.debug.424540273;xilinx.gnu.armv7.c.compiler.input.201075672">
-            			
-            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMA53X32GCCManagedMakePerProjectProfileC"/>
-            		
-        </scannerConfigBuildInfo>
-        		
         <scannerConfigBuildInfo instanceId="xilinx.gnu.armv7.exe.debug.465323110;xilinx.gnu.armv7.exe.debug.465323110.">
             			
             <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMA53X32GCCManagedMakePerProjectProfileC"/>
@@ -386,7 +388,5 @@
         </scannerConfigBuildInfo>
         	
     </storageModule>
-    	
-    <storageModule moduleId="refreshScope"/>
     
 </cproject>
