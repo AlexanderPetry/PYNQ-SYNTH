@@ -23,9 +23,10 @@ float signal::nextSample(float sampleRate) {
 
     switch (type) {
         case SINE:
-        	sample = arm_sin_f32(phase);
+        	//sample = arm_sin_f32(phase)* 0.5;
+        	sample = std::sin(phase);
             break;
-        case SQUARE:
+        /*case SQUARE:
             sample = (std::fmod(phase, 1.0f) < 0.5f) ? 1.0f : -1.0f;
             break;
         case SAW:
@@ -33,7 +34,7 @@ float signal::nextSample(float sampleRate) {
             break;
         case TRIANGLE:
             sample = 2.0f * std::abs(2.0f * (phase - std::floor(phase + 0.5f))) - 1.0f;
-            break;
+            break;*/
     }
 
 	phase += phaseIncrement;

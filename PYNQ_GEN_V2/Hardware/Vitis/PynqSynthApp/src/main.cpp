@@ -21,6 +21,8 @@
 #include "audio.h"
 #include "utils.h"
 
+#include <map>
+
 #define TIMER_DEVICE_ID      XPAR_XSCUTIMER_0_DEVICE_ID
 #define TIMER_IRPT_INTR      XPAR_SCUTIMER_INTR
 #define SAMPLE_RATE          48000
@@ -68,21 +70,54 @@ int main()
 
 	voices.emplace_back();
 	// Only once
+	std::map<int, int> activeVoices; // key: note, value: index in voices
 
-	int note = 30;
-	signal s(signal::SINE, MIDI::ToFreq(note), 0.0f, 0.5f);
-	voices[0].addSignal(s);
-	voices[0].play();
+	uint8_t midiMsg[3];
+	int midiState = 0;
 
 	while (1) {
-		usleep(1 * 1000000);
+		uint8_t byte;
+		if (XUartPs_Recv(&Uart_Ps, &byte, 1) == 1) {
+			if (byte & 0x80) { // Status byte
+				if ((byte & 0xF0) == 0x90 || (byte & 0xF0) == 0x80) {
+					midiMsg[0] = byte;
+					midiState = 1;
+				} else {
+					midiState = 0; // Unsupported status
+				}
+			} else {
+				if (midiState == 1) {
+					midiMsg[1] = byte;
+					midiState = 2;
+				} else if (midiState == 2) {
+					midiMsg[2] = byte;
+					midiState = 0;
 
-		if(note > 60) note = 30;
-		note++;
-		voices[0].signals[0].setFrequency(MIDI::ToFreq(note));
-		voices[0].signals[0].reset();
+					uint8_t status = midiMsg[0] & 0xF0;
+					uint8_t note = midiMsg[1];
+					uint8_t velocity = midiMsg[2];
 
+					if (status == 0x90 && velocity > 0) {
+						signal s(signal::SINE, MIDI::ToFreq(note), velocity / 127.0f, 0.5f);
+						voice v;
+						v.addSignal(s);
+						v.play();
+						voices.push_back(v);
+						activeVoices[note] = voices.size() - 1;
+					} else if (status == 0x80 || (status == 0x90 && velocity == 0)) {
+						auto it = activeVoices.find(note);
+						if (it != activeVoices.end()) {
+							voices[it->second].stop();
+							voices.erase(voices.begin() + it->second);
+							activeVoices.erase(it);
+						}
+					}
+				}
+			}
+		}
+		usleep(1000);
 	}
+
 
     cleanup_platform();
     return 0;

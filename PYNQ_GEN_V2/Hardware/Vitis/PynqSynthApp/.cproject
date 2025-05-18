@@ -57,7 +57,7 @@
                                     								
                                 </option>
                                 								
-                                <option id="xilinx.gnu.compiler.inferred.swplatform.flags.1240634666" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="" valueType="string"/>
+                                <option id="xilinx.gnu.compiler.inferred.swplatform.flags.1240634666" name="Software Platform Inferred Flags" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="" valueType="string"/>
                                 								
                                 <inputType id="xilinx.gnu.armv7.c.compiler.input.2048712964" name="C source files" superClass="xilinx.gnu.armv7.c.compiler.input"/>
                                 							
@@ -103,7 +103,7 @@
                                     								
                                 </option>
                                 								
-                                <option id="xilinx.gnu.compiler.inferred.swplatform.flags.1945358441" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="" valueType="string"/>
+                                <option id="xilinx.gnu.compiler.inferred.swplatform.flags.1945358441" name="Software Platform Inferred Flags" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="" valueType="string"/>
                                 								
                                 <inputType id="xilinx.gnu.armv7.cxx.compiler.input.1740825854" name="C++ source files" superClass="xilinx.gnu.armv7.cxx.compiler.input"/>
                                 							
@@ -157,7 +157,7 @@
                                 								
                                 <option id="xilinx.gnu.c.link.option.ldflags.2114955941" name="Linker Flags" superClass="xilinx.gnu.c.link.option.ldflags" useByScannerDiscovery="false" value=" -mcpu=cortex-a9 -mfpu=neon-vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec" valueType="string"/>
                                 								
-                                <option id="xilinx.gnu.c.link.option.libs.2075813396" superClass="xilinx.gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
+                                <option id="xilinx.gnu.c.link.option.libs.2075813396" name="Libraries (-l)" superClass="xilinx.gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
                                     									
                                     <listOptionValue builtIn="false" value="m"/>
                                     								
@@ -249,7 +249,7 @@
                                     								
                                 </option>
                                 								
-                                <option id="xilinx.gnu.compiler.inferred.swplatform.flags.153965942" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="" valueType="string"/>
+                                <option id="xilinx.gnu.compiler.inferred.swplatform.flags.153965942" name="Software Platform Inferred Flags" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="" valueType="string"/>
                                 								
                                 <inputType id="xilinx.gnu.armv7.c.compiler.input.1918336041" name="C source files" superClass="xilinx.gnu.armv7.c.compiler.input"/>
                                 							
@@ -269,7 +269,7 @@
                                 								
                                 <option id="xilinx.gnu.compiler.misc.other.1184917433" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" value="-c -fmessage-length=0 -MT&quot;$@&quot; -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard" valueType="string"/>
                                 								
-                                <option id="xilinx.gnu.compiler.inferred.swplatform.flags.1209947744" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="" valueType="string"/>
+                                <option id="xilinx.gnu.compiler.inferred.swplatform.flags.1209947744" name="Software Platform Inferred Flags" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="" valueType="string"/>
                                 								
                                 <inputType id="xilinx.gnu.armv7.cxx.compiler.input.1298379708" name="C++ source files" superClass="xilinx.gnu.armv7.cxx.compiler.input"/>
                                 							
