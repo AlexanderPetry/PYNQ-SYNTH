@@ -1,0 +1,12 @@
+class signal
+{
+public:
+	enum Type { SINE, SQUARE };
+	signal(Type type, float frequency, float phase, float amplitude);
+
+private:
+	Type type;
+	float frequency;
+	float phase;
+	float amplitude;
+};

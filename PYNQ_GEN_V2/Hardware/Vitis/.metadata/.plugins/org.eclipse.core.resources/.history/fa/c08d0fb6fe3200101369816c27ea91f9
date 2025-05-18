@@ -1,0 +1,44 @@
+#include "signal.hpp"
+#include <cmath>
+
+#ifndef M_PI
+static constexpr float M_PI = 3.14159265358979323846f;
+#endif
+
+signal::signal(Type type, float frequency, float phase, float amplitude)
+    : type(type), frequency(frequency), phase(phase), amplitude(amplitude) {}
+
+void signal::setFrequency(float freq) {
+    frequency = freq;
+}
+
+void signal::reset() {
+    phase = 0.0f;
+}
+
+float signal::nextSample(float sampleRate) {
+    float sample = 0.0f;
+    float phaseIncrement = frequency / sampleRate;
+
+    switch (type) {
+        case SINE:
+        	float sinVal, cosVal;
+        	arm_sin_cos_f32(2.0f * PI * phase, &sinVal, &cosVal);
+        	sample = sinVal;
+            break;
+        case SQUARE:
+            sample = (std::fmod(phase, 1.0f) < 0.5f) ? 1.0f : -1.0f;
+            break;
+        case SAW:
+            sample = 2.0f * (phase - std::floor(phase + 0.5f));
+            break;
+        case TRIANGLE:
+            sample = 2.0f * std::abs(2.0f * (phase - std::floor(phase + 0.5f))) - 1.0f;
+            break;
+    }
+
+    phase += phaseIncrement;
+    if (phase >= 1.0f) phase -= 1.0f;
+
+    return sample * amplitude;
+}

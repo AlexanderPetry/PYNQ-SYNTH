@@ -1,0 +1,7 @@
+#include "voice.hpp"
+
+void voice::play(float freq) {
+    signals.clear();
+    signals.emplace_back(signal::SINE, freq, 0.0f, 1.0f);
+    active = true;
+}

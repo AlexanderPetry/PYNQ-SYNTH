@@ -1,0 +1,18 @@
+#pragma once
+#include <vector>
+#include "signal.hpp"
+
+class voice
+{
+public:
+	void play();
+	void stop();
+	bool isActive() const;
+	float nextSample(float sampleRate);
+	void addSignal(signal s);
+
+private:
+	std::vector<signal> signals;
+	bool active = false;
+
+};

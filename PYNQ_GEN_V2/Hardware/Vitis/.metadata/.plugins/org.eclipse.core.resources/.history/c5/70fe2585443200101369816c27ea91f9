@@ -1,0 +1,14 @@
+#include <vector>
+#include "signal.hpp"
+
+class voice
+{
+public:
+	void play();
+	void stop();
+	bool isActive();
+
+private:
+	vector<signal> signals;
+
+};

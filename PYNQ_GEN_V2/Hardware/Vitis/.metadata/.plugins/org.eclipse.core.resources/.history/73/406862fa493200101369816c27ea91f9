@@ -1,0 +1,95 @@
+#include "platform.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include <vector>
+#include "voice.hpp"
+#include <stdio.h>
+#include <stdbool.h>
+#include "platform.h"
+#include "xil_printf.h"
+#include "arm_math.h"
+#include "arm_const_structs.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include "math.h"
+#include "xuartps.h"
+#include "xgpio.h"
+#include "audio.h"
+
+#define TIMER_DEVICE_ID      XPAR_XSCUTIMER_0_DEVICE_ID
+#define TIMER_IRPT_INTR      XPAR_SCUTIMER_INTR
+#define SAMPLE_RATE          48000
+#define UINT_SCALED_MAX_VALUE 0xFFFFFFF
+#define INTC_DEVICE_ID		XPAR_SCUGIC_SINGLE_DEVICE_ID
+
+XScuTimer Timer;
+XScuGic Intc;
+std::vector<voice> voices;
+
+static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
+static void Timer_ISR(void *CallBackRef);
+
+int main()
+{
+
+    init_platform();
+
+    // Init voices
+    voices.emplace_back();
+
+    // Init timer
+	XScuTimer Scu_Timer;
+	XScuTimer_Config *Scu_ConfigPtr;
+	XScuGic IntcInstance;
+
+	Scu_ConfigPtr = XScuTimer_LookupConfig(XPAR_PS7_SCUTIMER_0_DEVICE_ID);
+	XScuTimer_CfgInitialize(&Scu_Timer, Scu_ConfigPtr, Scu_ConfigPtr->BaseAddr);
+	Timer_Intr_Setup(&IntcInstance, &Scu_Timer, XPS_SCU_TMR_INT_ID);
+	XScuTimer_LoadTimer(&Scu_Timer,(XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)/(SAMPLE_RATE));
+	XScuTimer_EnableAutoReload(&Scu_Timer);
+	XScuTimer_Start(&Scu_Timer);
+
+    // Trigger note on
+    voices[0].play();
+    usleep(1 * 1000000);
+
+    // Note off
+    voices[0].stop();
+    usleep(1 * 1000000);
+
+    // Stay active or loop forever
+    while (1);
+
+    cleanup_platform();
+    return 0;
+}
+
+
+static void Timer_ISR(void *CallBackRef)
+{
+	float sample = 0.0f;
+	for (voice& v : voices) {
+	    if (v.isActive())
+	        sample += v.nextSample(SAMPLE_RATE );
+	}
+	sample = fmaxf(fminf(sample, 1.0f), -1.0f);
+	Xil_printf(sample);
+	uint32_t scaled = static_cast<uint32_t>(((sample + 1.0f) * 0.5f) * UINT_SCALED_MAX_VALUE);
+	Xil_Out32(I2S_DATA_TX_L_REG, scaled);
+	Xil_Out32(I2S_DATA_TX_R_REG, scaled);
+
+}
+
+static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId)
+{
+	XScuGic_Config *IntcConfig;
+	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+	XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig, IntcConfig->CpuBaseAddress);
+	Xil_ExceptionInit();
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler,IntcInstancePtr);
+	XScuGic_Connect(IntcInstancePtr, TimerIntrId, (Xil_ExceptionHandler)Timer_ISR, (void *)TimerInstancePtr);
+	XScuGic_Enable(IntcInstancePtr, TimerIntrId);
+	XScuTimer_EnableInterrupt(TimerInstancePtr);
+	Xil_ExceptionEnable();
+	return XST_SUCCESS;
+}

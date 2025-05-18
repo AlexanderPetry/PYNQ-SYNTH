@@ -1,0 +1,26 @@
+#include "voice.hpp"
+
+void voice::play() {
+    signals.clear();
+    signals.emplace_back(signal::SINE, 800.0, 0.0f, 0.5f);
+    active = true;
+}
+
+void voice::stop() {
+    active = false;
+    signals.clear();
+}
+
+bool voice::isActive() const {
+    return active;
+}
+
+float voice::nextSample(float sampleRate) {
+    if (!active) return 0.0f;
+
+    float sum = 0.0f;
+    for (auto& s : signals) {
+        sum += s.nextSample(sampleRate);
+    }
+    return sum;
+}

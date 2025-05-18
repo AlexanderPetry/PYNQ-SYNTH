@@ -1,0 +1,133 @@
+#include "platform.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include <vector>
+#include "voice.hpp"
+#include <stdio.h>
+#include <stdbool.h>
+#include "platform.h"
+
+#include "xil_printf.h"
+#include "xil_mmu.h"
+#include "xil_cache.h"
+
+#include "arm_math.h"
+#include "arm_const_structs.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include "math.h"
+#include "xuartps.h"
+#include "xgpio.h"
+#include "audio.h"
+#include "utils.h"
+
+#define TIMER_DEVICE_ID      XPAR_XSCUTIMER_0_DEVICE_ID
+#define TIMER_IRPT_INTR      XPAR_SCUTIMER_INTR
+#define SAMPLE_RATE          48000
+#define UINT_SCALED_MAX_VALUE 0xFFFFFF
+#define INTC_DEVICE_ID		XPAR_SCUGIC_SINGLE_DEVICE_ID
+
+#define BRAM_BASE_ADDR 0x40000000
+volatile uint32_t* bram = (uint32_t*)BRAM_BASE_ADDR;
+
+uint32_t note = bram[0]; // Read first word
+
+
+XScuTimer Timer;
+XScuGic Intc;
+std::vector<voice> voices;
+
+static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
+static void Timer_ISR(void *CallBackRef);
+void print_bram_data();
+
+int main()
+{
+
+    init_platform();
+    Xil_SetTlbAttributes(0x40000000, 0x14de2);
+
+	XUartPs Uart_Ps;
+	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
+	XUartPs_CfgInitialize(&Uart_Ps, Config, Config->BaseAddress);
+	XUartPs_SetBaudRate(&Uart_Ps, 115200);
+	xil_printf("Ready for input\r\n");
+
+	IicConfig(XPAR_XIICPS_0_DEVICE_ID);
+	AudioPllConfig();
+	AudioConfigureJacks();
+	LineinLineoutConfig();
+
+    // Init timer
+	/*XScuTimer Scu_Timer;
+	XScuTimer_Config *Scu_ConfigPtr;
+	XScuGic IntcInstance;
+
+	Scu_ConfigPtr = XScuTimer_LookupConfig(XPAR_PS7_SCUTIMER_0_DEVICE_ID);
+	XScuTimer_CfgInitialize(&Scu_Timer, Scu_ConfigPtr, Scu_ConfigPtr->BaseAddr);
+	Timer_Intr_Setup(&IntcInstance, &Scu_Timer, XPS_SCU_TMR_INT_ID);
+	XScuTimer_LoadTimer(&Scu_Timer, (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)/(SAMPLE_RATE));
+	XScuTimer_EnableAutoReload(&Scu_Timer);
+	XScuTimer_Start(&Scu_Timer);
+
+	voices.emplace_back();*/
+	// Only once
+
+	/*int note = 30;
+	signal s(signal::SINE, MIDI::ToFreq(note), 0.0f, 0.5f);
+	voices[0].addSignal(s);
+	voices[0].play();*/
+
+	while (1) {
+		usleep(1 * 1000000);
+/*
+		if(note > 60) note = 30;
+		note++;
+		voices[0].signals[0].setFrequency(MIDI::ToFreq(note));
+		voices[0].signals[0].reset();*/
+		print_bram_data();
+	}
+
+    cleanup_platform();
+    return 0;
+}
+
+
+void print_bram_data()
+{
+	//Xil_DCacheFlush();
+	Xil_DCacheInvalidateRange(0x40000000, 16);
+	xil_printf("BRAM[0] = %u\r\n", bram[0]);
+    xil_printf("BRAM[1] = %lu\r\n", bram[1]);
+    xil_printf("BRAM[2] = %lu\r\n", bram[2]);
+}
+
+static void Timer_ISR(void *CallBackRef)
+{
+	float sample = 0.0f;
+	for (voice& v : voices) {
+	    if (v.isActive())
+	        sample += v.nextSample(SAMPLE_RATE );
+	}
+	sample = fmaxf(fminf(sample, 1.0f), -1.0f);
+	uint32_t scaled = static_cast<uint32_t>(((sample + 1.0f) * 0.5f) * UINT_SCALED_MAX_VALUE);
+	Xil_Out32(I2S_DATA_TX_L_REG, scaled);
+	Xil_Out32(I2S_DATA_TX_R_REG, scaled);
+
+}
+
+
+
+static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId)
+{
+	XScuGic_Config *IntcConfig;
+	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+	XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig, IntcConfig->CpuBaseAddress);
+	Xil_ExceptionInit();
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler,IntcInstancePtr);
+	XScuGic_Connect(IntcInstancePtr, TimerIntrId, (Xil_ExceptionHandler)Timer_ISR, (void *)TimerInstancePtr);
+	XScuGic_Enable(IntcInstancePtr, TimerIntrId);
+	XScuTimer_EnableInterrupt(TimerInstancePtr);
+	Xil_ExceptionEnable();
+	return XST_SUCCESS;
+}

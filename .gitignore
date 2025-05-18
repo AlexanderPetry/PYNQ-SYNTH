@@ -1,0 +1,47 @@
+# Vivado
+*.jou
+*.log
+*.str
+*.opt
+*.xml
+*.wdb
+*.pb
+*.rpt
+*.html
+*.bxml
+*.backup.*
+*.xpr
+*.Xil
+*.pdom
+
+# Vitis
+*.bin
+*.elf
+*.map
+*.log
+*.o
+*.obj
+*.link
+*.vitis*
+/.metadata/
+/.release/
+/.build/
+
+# Common
+*.tmp
+*.bak
+*.cache
+*.DS_Store
+*.swp
+*.swo
+
+# Project-generated folders
+.hw/
+.sim/
+.sdk/
+.ip_user_files/
+.cache/
+.webtalk/
+.xpr.cache/
+.vivado/
+.vitis/

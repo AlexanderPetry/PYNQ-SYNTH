@@ -1,0 +1,90 @@
+timestamp=[2025-05-16 11:45:58], mode=WORKBENCH_START, duration=0:00:07.229, duration_ms=7229, data={}
+timestamp=[2025-05-16 11:45:58], mode=WORKBENCH_UI_INIT, duration=0:00:00.050, duration_ms=50, data={editors_count=0, platform_editors_count=0, projects_count=0, platform_projects_count=0, active_platform_editor=false, projects=}
+timestamp=[2025-05-16 11:45:59], mode=PLATFORM_REPOSITORY_INIT, duration=0:00:00.056, duration_ms=56, data={}
+timestamp=[2025-05-16 11:47:09], mode=APP_CREATION, duration=0:00:28.130, duration_ms=28130, data={name=PynqSynthApp, project_type=sdk, os=standalone, processor=ps7_cortexa9, runtime=cpp, platform=UpdatedAudioProc, application_type=application}
+timestamp=[2025-05-16 11:49:12], mode=PLATFORM_GENERATION, duration=0:00:45.675, duration_ms=45675, data={name=UpdatedAudioProc}
+timestamp=[2025-05-16 11:49:14], mode=BUILD, duration=0:00:01.472, duration_ms=1472, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 11:49:23], mode=BUILD, duration=0:00:09.027, duration_ms=9027, data={name=PynqSynthApp_system, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 11:50:40], mode=APP_CREATION, duration=0:00:09.358, duration_ms=9358, data={name=platformthing, project_type=sdk, os=standalone, processor=cortex-a9, runtime=C/C++, platform=UpdatedAudioProc, application_type=application}
+timestamp=[2025-05-16 11:51:27], mode=BUILD, duration=0:00:01.448, duration_ms=1448, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 12:02:01], mode=BUILD, duration=0:00:00.335, duration_ms=335, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:01:53], mode=BUILD, duration=0:00:00.664, duration_ms=664, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:02:30], mode=BUILD, duration=0:00:00.700, duration_ms=700, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:06:02], mode=BUILD, duration=0:00:00.287, duration_ms=287, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-16 13:08:30], mode=BUILD, duration=0:02:27.695, duration_ms=147695, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:09:11], mode=BUILD, duration=0:00:00.290, duration_ms=290, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-16 13:12:42], mode=BUILD, duration=0:03:30.168, duration_ms=210168, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:13:49], mode=BUILD, duration=0:00:00.394, duration_ms=394, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-16 13:13:58], mode=BUILD, duration=0:00:09.051, duration_ms=9051, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:14:28], mode=BUILD, duration=0:00:00.377, duration_ms=377, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-16 13:14:37], mode=BUILD, duration=0:00:08.178, duration_ms=8178, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:16:55], mode=BUILD, duration=0:00:00.397, duration_ms=397, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-16 13:17:05], mode=BUILD, duration=0:00:08.857, duration_ms=8857, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:18:35], mode=BUILD, duration=0:00:00.380, duration_ms=380, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-16 13:18:51], mode=BUILD, duration=0:00:15.519, duration_ms=15519, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:19:51], mode=BUILD, duration=0:00:07.753, duration_ms=7753, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:22:36], mode=BUILD, duration=0:00:07.769, duration_ms=7769, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:23:10], mode=BUILD, duration=0:00:07.551, duration_ms=7551, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:23:27], mode=BUILD, duration=0:00:08.309, duration_ms=8309, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:24:32], mode=BUILD, duration=0:00:08.379, duration_ms=8379, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:27:19], mode=BUILD, duration=0:00:07.950, duration_ms=7950, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:28:14], mode=BUILD, duration=0:00:08.159, duration_ms=8159, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:29:33], mode=BUILD, duration=0:00:08.707, duration_ms=8707, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:30:55], mode=BUILD, duration=0:00:08.003, duration_ms=8003, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:31:29], mode=BUILD, duration=0:00:08.523, duration_ms=8523, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:31:51], mode=BUILD, duration=0:00:08.461, duration_ms=8461, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:32:12], mode=BUILD, duration=0:00:09.314, duration_ms=9314, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:33:07], mode=BUILD, duration=0:00:00.366, duration_ms=366, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-16 13:33:17], mode=BUILD, duration=0:00:09.259, duration_ms=9259, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:35:33], mode=BUILD, duration=0:00:08.328, duration_ms=8328, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:35:59], mode=BUILD, duration=0:00:08.262, duration_ms=8262, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:36:28], mode=BUILD, duration=0:00:08.926, duration_ms=8926, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:37:07], mode=BUILD, duration=0:00:11.147, duration_ms=11147, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:45:21], mode=BUILD, duration=0:00:11.211, duration_ms=11211, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:47:13], mode=BUILD, duration=0:00:10.244, duration_ms=10244, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:48:40], mode=BUILD, duration=0:00:09.713, duration_ms=9713, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:49:56], mode=BUILD, duration=0:00:10.380, duration_ms=10380, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 13:58:28], mode=BUILD, duration=0:00:09.673, duration_ms=9673, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 14:04:20], mode=BUILD, duration=0:00:10.247, duration_ms=10247, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 14:06:38], mode=BUILD, duration=0:00:10.499, duration_ms=10499, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 14:08:04], mode=BUILD, duration=0:00:08.801, duration_ms=8801, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 14:08:21], mode=BUILD, duration=0:00:09.775, duration_ms=9775, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 14:12:02], mode=BUILD, duration=0:00:08.355, duration_ms=8355, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 14:13:30], mode=BUILD, duration=0:00:10.624, duration_ms=10624, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-16 14:15:16], mode=BUILD, duration=0:00:10.437, duration_ms=10437, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 10:46:37], mode=BUILD, duration=0:00:01.578, duration_ms=1578, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-17 10:47:13], mode=BUILD, duration=0:00:34.915, duration_ms=34915, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 10:52:21], mode=BUILD, duration=0:00:13.825, duration_ms=13825, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 10:54:18], mode=BUILD, duration=0:00:25.023, duration_ms=25023, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:05:18], mode=BUILD, duration=0:00:08.379, duration_ms=8379, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:05:43], mode=BUILD, duration=0:00:08.646, duration_ms=8646, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:06:09], mode=BUILD, duration=0:00:08.070, duration_ms=8070, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:09:31], mode=BUILD, duration=0:00:08.148, duration_ms=8148, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:10:16], mode=BUILD, duration=0:00:12.688, duration_ms=12688, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:10:27], mode=BUILD, duration=0:00:10.646, duration_ms=10646, data={name=PynqSynthApp_system, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:13:37], mode=BUILD, duration=0:00:08.188, duration_ms=8188, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:14:13], mode=BUILD, duration=0:00:10.860, duration_ms=10860, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:15:48], mode=BUILD, duration=0:00:10.334, duration_ms=10334, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:19:54], mode=BUILD, duration=0:00:11.202, duration_ms=11202, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:30:19], mode=BUILD, duration=0:00:11.401, duration_ms=11401, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:42:47], mode=BUILD, duration=0:00:14.449, duration_ms=14449, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:43:21], mode=BUILD, duration=0:00:16.773, duration_ms=16773, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:49:33], mode=BUILD, duration=0:00:09.720, duration_ms=9720, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:50:16], mode=BUILD, duration=0:00:12.749, duration_ms=12749, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:54:15], mode=BUILD, duration=0:00:12.594, duration_ms=12594, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:54:58], mode=BUILD, duration=0:00:13.433, duration_ms=13433, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:58:14], mode=BUILD, duration=0:00:12.376, duration_ms=12376, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 11:58:46], mode=BUILD, duration=0:00:12.721, duration_ms=12721, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 12:01:04], mode=BUILD, duration=0:00:16.316, duration_ms=16316, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 12:07:04], mode=PLATFORM_CREATION, duration=0:00:06.719, duration_ms=6719, data={platform_source=platform, os=null, processor=null, platform=custom}
+timestamp=[2025-05-17 12:15:29], mode=PLATFORM_GENERATION, duration=0:00:28.326, duration_ms=28326, data={name=UpdatedAudioProc}
+timestamp=[2025-05-17 12:16:42], mode=APP_CREATION, duration=0:00:24.583, duration_ms=24583, data={name=FSBLApp, project_type=sdk, os=standalone, processor=cortex-a9, runtime=C/C++, platform=UpdatedAudioProc, application_type=application}
+timestamp=[2025-05-17 14:30:16], mode=BUILD, duration=0:00:11.959, duration_ms=11959, data={name=FSBLApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 14:30:31], mode=BUILD, duration=0:00:14.258, duration_ms=14258, data={name=FSBLApp_system, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 15:00:20], mode=BUILD, duration=0:11:41.669, duration_ms=701669, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 15:04:20], mode=PLATFORM_GENERATION, duration=0:00:14.462, duration_ms=14462, data={name=UpdatedAudioProc}
+timestamp=[2025-05-17 15:04:21], mode=BUILD, duration=0:00:01.032, duration_ms=1032, data={name=PynqSynthApp, configuration=Debug, clean_build=true}
+timestamp=[2025-05-17 15:04:21], mode=BUILD, duration=0:00:00.389, duration_ms=389, data={name=PynqSynthApp_system, configuration=Debug, clean_build=true}
+timestamp=[2025-05-17 15:06:18], mode=PLATFORM_GENERATION, duration=0:00:54.385, duration_ms=54385, data={name=UpdatedAudioProc}
+timestamp=[2025-05-17 15:15:55], mode=BUILD, duration=0:09:33.772, duration_ms=573772, data={name=PynqSynthApp, configuration=Debug, clean_build=false}
+timestamp=[2025-05-17 15:16:06], mode=BUILD, duration=0:00:10.197, duration_ms=10197, data={name=PynqSynthApp_system, configuration=Debug, clean_build=false}
