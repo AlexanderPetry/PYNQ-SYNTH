@@ -41,3 +41,12 @@ bsp reload
 catch {bsp regenerate}
 platform clean
 platform generate
+platform active {UpdatedAudioProc}
+platform config -updatehw {C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vivado/UpdatedAudioProcV2.xsa}
+platform generate -domains 
+bsp reload
+platform config -updatehw {C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vivado/UpdatedAudioProcV2.xsa}
+platform clean
+platform generate
+domain active {zynq_fsbl}
+bsp reload

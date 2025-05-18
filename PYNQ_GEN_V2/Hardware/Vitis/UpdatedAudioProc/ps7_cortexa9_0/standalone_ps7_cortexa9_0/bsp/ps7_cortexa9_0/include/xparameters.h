@@ -169,11 +169,6 @@
 /******************************************************************/
 
 
-/* Peripheral Definitions for peripheral AUDIO_CODEC_CTRL_AUDIO_CODEC_CTRL_0 */
-#define XPAR_AUDIO_CODEC_CTRL_AUDIO_CODEC_CTRL_0_BASEADDR 0x43C00000
-#define XPAR_AUDIO_CODEC_CTRL_AUDIO_CODEC_CTRL_0_HIGHADDR 0x43C0FFFF
-
-
 /* Peripheral Definitions for peripheral PS7_AFI_0 */
 #define XPAR_PS7_AFI_0_S_AXI_BASEADDR 0xF8008000
 #define XPAR_PS7_AFI_0_S_AXI_HIGHADDR 0xF8008FFF
@@ -266,12 +261,14 @@
 #define XPAR_PS7_SLCR_0_S_AXI_HIGHADDR 0xF8000FFF
 
 
+/* Peripheral Definitions for peripheral AUDIO_CODEC_CTRL_0 */
+#define XPAR_AUDIO_CODEC_CTRL_0_BASEADDR 0x43C00000
+#define XPAR_AUDIO_CODEC_CTRL_0_HIGHADDR 0x43C0FFFF
+
+
 /******************************************************************/
 
 
-/* Canonical Definitions for peripheral AUDIO_CODEC_CTRL_AUDIO_CODEC_CTRL_0 */
-#define XPAR_AUDIO_CODEC_CTRL_0_BASEADDR 0x43C00000
-#define XPAR_AUDIO_CODEC_CTRL_0_HIGHADDR 0x43C0FFFF
 
 
 
@@ -313,7 +310,7 @@
 /******************************************************************/
 
 /* Definitions for driver GPIO */
-#define XPAR_XGPIO_NUM_INSTANCES 2
+#define XPAR_XGPIO_NUM_INSTANCES 3
 
 /* Definitions for peripheral AXI_GPIO_1 */
 #define XPAR_AXI_GPIO_1_BASEADDR 0x41210000
@@ -331,6 +328,14 @@
 #define XPAR_AXI_GPIO_2_IS_DUAL 1
 
 
+/* Definitions for peripheral AXI_GPIO_0 */
+#define XPAR_AXI_GPIO_0_BASEADDR 0x41200000
+#define XPAR_AXI_GPIO_0_HIGHADDR 0x4120FFFF
+#define XPAR_AXI_GPIO_0_DEVICE_ID 2
+#define XPAR_AXI_GPIO_0_INTERRUPT_PRESENT 0
+#define XPAR_AXI_GPIO_0_IS_DUAL 1
+
+
 /******************************************************************/
 
 /* Canonical definitions for peripheral AXI_GPIO_1 */
@@ -346,6 +351,13 @@
 #define XPAR_GPIO_1_DEVICE_ID XPAR_AXI_GPIO_2_DEVICE_ID
 #define XPAR_GPIO_1_INTERRUPT_PRESENT 0
 #define XPAR_GPIO_1_IS_DUAL 1
+
+/* Canonical definitions for peripheral AXI_GPIO_0 */
+#define XPAR_GPIO_2_BASEADDR 0x41200000
+#define XPAR_GPIO_2_HIGHADDR 0x4120FFFF
+#define XPAR_GPIO_2_DEVICE_ID XPAR_AXI_GPIO_0_DEVICE_ID
+#define XPAR_GPIO_2_INTERRUPT_PRESENT 0
+#define XPAR_GPIO_2_IS_DUAL 1
 
 
 /******************************************************************/
