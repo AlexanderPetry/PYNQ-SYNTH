@@ -1,0 +1,14 @@
+#include "peripheral.h"
+
+int main() {
+	PS_init();
+	UART_init();
+	ROT_ENC_init();
+    while (1) {
+    	ROT_ENC_GetAction();
+    }
+    return 0;
+}
+
+
+

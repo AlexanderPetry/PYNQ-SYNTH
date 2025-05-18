@@ -67,11 +67,7 @@
                                 								
                                 <option id="xilinx.gnu.compiler.option.debugging.level.615899656" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
                                 								
-                                <option id="xilinx.gnu.compiler.inferred.swplatform.includes.1111398442" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" useByScannerDiscovery="false" valueType="includePath">
-                                    									
-                                    <listOptionValue builtIn="false" value="${resolvePlatformFile:project=PynqPedalApp,fileType=bspInclude}"/>
-                                    								
-                                </option>
+                                <option id="xilinx.gnu.compiler.inferred.swplatform.includes.1111398442" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" useByScannerDiscovery="false" valueType="includePath"/>
                                 								
                                 <option id="xilinx.gnu.compiler.misc.other.1979159681" name="Other flags" superClass="xilinx.gnu.compiler.misc.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -MT&quot;$@&quot; -mcpu=cortex-a9 -mfpu=neon-vfpv3 -mfloat-abi=hard -Wno-narrowing" valueType="string"/>
                                 								
@@ -90,6 +86,12 @@
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/CMSIS_libraries/Include/dsp}&quot;"/>
                                     									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/CMSIS_libraries/ComputeLibrary/Include}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="${resolvePlatformFile:project=PynqPedalApp,fileType=bspInclude}"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/PynqPedalApp/src/includes}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="&quot;${workspace_loc:/PynqPedalApp/src/source}&quot;"/>
                                     								
                                 </option>
                                 								
@@ -357,17 +359,13 @@
         	
     </storageModule>
     	
+    <storageModule moduleId="refreshScope"/>
+    	
     <storageModule moduleId="scannerConfiguration">
         		
         <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
         		
         <scannerConfigBuildInfo instanceId="xilinx.gnu.armv7.exe.debug.1700287123;xilinx.gnu.armv7.exe.debug.1700287123.">
-            			
-            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMA53X32GCCManagedMakePerProjectProfileC"/>
-            		
-        </scannerConfigBuildInfo>
-        		
-        <scannerConfigBuildInfo instanceId="xilinx.gnu.armv7.exe.debug.1700287123;xilinx.gnu.armv7.exe.debug.1700287123.;xilinx.gnu.armv7.c.toolchain.compiler.debug.1389225284;xilinx.gnu.armv7.c.compiler.input.1640269380">
             			
             <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMA53X32GCCManagedMakePerProjectProfileC"/>
             		
@@ -384,9 +382,13 @@
             <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMA53X32GCCManagedMakePerProjectProfileC"/>
             		
         </scannerConfigBuildInfo>
+        		
+        <scannerConfigBuildInfo instanceId="xilinx.gnu.armv7.exe.debug.1700287123;xilinx.gnu.armv7.exe.debug.1700287123.;xilinx.gnu.armv7.cxx.toolchain.compiler.debug.856716494;xilinx.gnu.armv7.cxx.compiler.input.2034315286">
+            			
+            <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.xilinx.managedbuilder.ui.ARMA53X32GCCManagedMakePerProjectProfileC"/>
+            		
+        </scannerConfigBuildInfo>
         	
     </storageModule>
-    	
-    <storageModule moduleId="refreshScope"/>
     
 </cproject>

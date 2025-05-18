@@ -1,0 +1,43 @@
+#include "peripheral.h"
+
+UART::UART(){
+	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
+	XUartPs_CfgInitialize(&Uart_Ps, Config, Config->BaseAddress);
+	XUartPs_SetBaudRate(&Uart_Ps, 115200);
+}
+
+
+Rotary_enc::Rotary_enc(){
+	XGpio_Initialize(&rotary, XPAR_AXI_GPIO_0_DEVICE_ID);
+	XGpio_SetDataDirection(&rotary, 1, 0xFFFFFFFF);  // all inputs
+	PS = ROT_ENC_Getvalue();
+}
+
+Rotary_enc::RE_STATE
+Rotary_enc::GetSate(){
+	u32 CS = ROT_ENC_Getvalue();
+
+	if(CS == 0b111){
+	   switch(PS){
+	       case 0b110:
+	        	if(debounce){
+	        			debounce = 0;
+	        	}else {
+	        		debounce= 1;
+	        		xil_printf("button\r\n");
+	        	}
+				break;
+			case 0b011:
+				I32increment(counter,1);
+				xil_printf("rechts, %d\r\n",counter);
+				break;
+			case 0b101:
+				I32decrement(counter,1);
+				xil_printf("links, %d\r\n",counter);
+				break;
+			default:
+				break;
+	        }
+	}
+	PS = CS;
+}

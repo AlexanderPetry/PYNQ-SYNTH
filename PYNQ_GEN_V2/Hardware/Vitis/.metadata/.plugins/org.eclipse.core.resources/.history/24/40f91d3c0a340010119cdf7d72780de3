@@ -1,0 +1,68 @@
+#include "peripheral.h"
+
+
+
+void PS_init();
+
+int main() {
+
+
+
+	xil_printf("Ready for input\r\n");
+
+    XGpio_Initialize(&rotary, XPAR_AXI_GPIO_0_DEVICE_ID);
+    XGpio_SetDataDirection(&rotary, 1, 0xFFFFFFFF);  // all inputs
+
+    u32 PS = XGpio_DiscreteRead(&rotary, 1);
+    u32 NS = 0;
+
+    //int counter = INT_MAX -20;
+    int counter = 2147483647-10;
+
+    u8 debounce=1;
+    while (1) {
+        u32 CS = XGpio_DiscreteRead(&rotary, 1);
+
+        if(CS == 0b111){
+        	switch(PS){
+        		case 0b110:
+        				if(debounce){
+        					debounce = 0;
+        				}else {
+        					debounce= 1;
+        					xil_printf("button\r\n");
+        				}
+						break;
+				case 0b011:
+						I32increment(counter,1);
+						xil_printf("rechts, %d\r\n",counter);
+					   break;
+				case 0b101:
+						I32decrement(counter,1);
+						xil_printf("links, %d\r\n",counter);
+					   break;
+				default:
+					   break;
+        	}
+
+        }
+        PS = CS;
+        usleep(1000);
+    }
+
+    return 0;
+}
+
+void UART_INIT(){
+
+}
+
+void PS_init(){
+	init_platform();
+
+	XUartPs Uart_Ps;
+	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
+	XUartPs_CfgInitialize(&Uart_Ps, Config, Config->BaseAddress);
+	XUartPs_SetBaudRate(&Uart_Ps, 115200);
+}
+

@@ -1,0 +1,11 @@
+#include "peripheral.h"
+
+void UART_INIT(){
+
+	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
+	XUartPs_CfgInitialize(&Uart_Ps, Config, Config->BaseAddress);
+	XUartPs_SetBaudRate(&Uart_Ps, 115200);
+}
+void PS_init(){
+	init_platform();
+}

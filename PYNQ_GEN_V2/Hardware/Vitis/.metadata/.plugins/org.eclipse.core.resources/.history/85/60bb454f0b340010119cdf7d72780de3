@@ -1,0 +1,60 @@
+#include "peripheral.h"
+
+
+
+void PS_init();
+
+int main() {
+
+
+
+
+
+
+
+
+
+    //int counter = INT_MAX -20;
+    int counter = 0;
+
+    u8 debounce=1;
+
+    while (1) {
+
+
+        if(CS == 0b111){
+        	switch(PS){
+        		case 0b110:
+        				if(debounce){
+        					debounce = 0;
+        				}else {
+        					debounce= 1;
+        					xil_printf("button\r\n");
+        				}
+						break;
+				case 0b011:
+						I32increment(counter,1);
+						xil_printf("rechts, %d\r\n",counter);
+					   break;
+				case 0b101:
+						I32decrement(counter,1);
+						xil_printf("links, %d\r\n",counter);
+					   break;
+				default:
+					   break;
+        	}
+
+        }
+        PS = CS;
+        usleep(1000);
+    }
+
+    return 0;
+}
+
+ROT_ENC_GetAction(){
+	u32 CS = ROT_ENC_Getvalue();
+}
+
+
+

@@ -1,0 +1,13 @@
+#include "peripheral.h"
+
+int main() {
+	PS_init();
+
+    while (1) {
+
+    }
+    return 0;
+}
+
+
+
