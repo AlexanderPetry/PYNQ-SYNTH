@@ -1,0 +1,42 @@
+#include "xgpio.h"
+#include "xparameters.h"
+#include "sleep.h"
+#include "platform.h"
+#include "stdio.h"
+#include "xuartps.h"
+#include "xgpio.h"
+
+XGpio rotary;
+
+int main() {
+    init_platform();
+
+	XUartPs Uart_Ps;
+	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
+	XUartPs_CfgInitialize(&Uart_Ps, Config, Config->BaseAddress);
+	XUartPs_SetBaudRate(&Uart_Ps, 115200);
+	xil_printf("Ready for input\r\n");
+
+    XGpio_Initialize(&rotary, XPAR_AXI_GPIO_0_DEVICE_ID);
+    XGpio_SetDataDirection(&rotary, 1, 0xFFFFFFFF);  // all inputs
+
+    u32 PS = XGpio_DiscreteRead(&rotary, 1);
+
+    int counter = 0;
+
+    while (1) {
+        u32 curr = XGpio_DiscreteRead(&rotary, 1);
+
+        u8 SW  = curr & 0b001;
+        u8 A  = curr & 0b010;
+        u8 B = curr & 0b100;
+
+        if(){
+
+        }
+
+        usleep(1000);
+    }
+
+    return 0;
+}

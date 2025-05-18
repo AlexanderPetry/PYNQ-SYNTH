@@ -8,6 +8,21 @@
 
 XGpio rotary;
 
+#define INT_MAX 2147483647
+#define INT_MIN -2147483648
+
+#define I32increment(v, a) \
+    do { \
+        if ((a) > 0 && (v) > INT_MAX - (a)) \
+            (v) = INT_MAX; \
+        else if ((a) < 0 && (v) < INT_MIN - (a)) \
+            (v) = INT_MIN; \
+        else \
+            (v) += (a); \
+    } while (0)
+
+#define I32decrement(v, a) I32increment((v), -(a))
+
 int main() {
     init_platform();
 
@@ -20,35 +35,47 @@ int main() {
     XGpio_Initialize(&rotary, XPAR_AXI_GPIO_0_DEVICE_ID);
     XGpio_SetDataDirection(&rotary, 1, 0xFFFFFFFF);  // all inputs
 
-    u32 prev = XGpio_DiscreteRead(&rotary, 1);
-    int counter = 0;
+    u32 PS = XGpio_DiscreteRead(&rotary, 1);
+    u32 NS = 0;
 
+    //int counter = INT_MAX -20;
+    int counter = 2147483647-10;
+
+    u8 debounce=1;
     while (1) {
-        u32 curr = XGpio_DiscreteRead(&rotary, 1);
+        u32 CS = XGpio_DiscreteRead(&rotary, 1);
 
-        u8 sw  = curr & 0x01;
-        u8 dt  = (curr >> 1) & 0x01;
-        u8 clk = (curr >> 2) & 0x01;
+        if(CS == 0b111){
+        	switch(PS){
+        		case 0b110:
+        				if(debounce){
+        					debounce = 0;
+        				}else {
+        					debounce= 1;
+        					xil_printf("button\r\n");
+        				}
+						break;
+				case 0b011:
+						I32increment(counter,1);
+						xil_printf("rechts, %d\r\n",counter);
+					   break;
+				case 0b101:
+						I32decrement(counter,1);
+						xil_printf("links, %d\r\n",counter);
+					   break;
+				default:
+					   break;
+        	}
 
-        u8 prev_clk = prev & 0x01;
-
-        if (prev_clk == 1 && clk == 0) { // falling edge
-            if (dt) {
-                counter++;
-                xil_printf("Right | %d\r\n", counter);
-            } else {
-                counter--;
-                xil_printf("Left  | %d\r\n", counter);
-            }
         }
-
-        if ((prev >> 2 & 0x01) == 1 && sw == 0) {
-            xil_printf("Button pressed\r\n");
-        }
-
-        prev = curr;
-        usleep(1000); // debounce
+        PS = CS;
+        usleep(1000);
     }
 
     return 0;
 }
+//idle = 7 -> 0b111
+//rotary btn = 6 -> 0b110
+//A =
+//B =
+// 3&& 7 -> rechts 5 && 7 -> links
