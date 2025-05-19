@@ -9,11 +9,23 @@ int main() {
 	UART uart{ UART::instance() };
 	Audio_Driver audio{ Audio_Driver::instance()};
 	Rotary_enc Rot_enc{ Rotary_enc::instance() };
+	Switch_arr SW_ARR{ Switch_arr::instance() };
+	Button_Array BTN_ARR{ Button_Array::instance() };
 
-    while (1) {
-    }
+	constexpr u8 total_btns = 4;
+
+	while (1) {
+		for (u8 i = 1; i <= total_btns; ++i) {
+			u8 state = BTN_ARR.BTNx_State(i);
+			if (state == Switch_arr::ON_Changed) {
+				xil_printf("BTN%u changed to: ON\r\n", i);
+			} else if (state == Switch_arr::OFF_Changed) {
+				xil_printf("BTN%u changed to: OFF\r\n", i);
+			}
+		}
+		usleep(10000);
+	}
     cleanup_platform();
     return 0;
 }
-
 

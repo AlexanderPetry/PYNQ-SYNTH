@@ -1,0 +1,39 @@
+#ifndef LOGIC_H
+#define LOGIC_H
+
+#include "arm_math.h"
+#include "arm_const_structs.h"
+#include "xil_types.h"
+
+#define EFFECT_AMOUNT 3
+typedef float float32_t;
+typedef float32_t(*Eff_CB)(float32_t sample, void* params2);
+
+struct gain_Vstr{
+	float gain{0};
+};
+
+float32_t gain_effect(float32_t sample, void* params2);
+
+struct SoundEffect{
+ char EffName[20]={""};
+ u8 Effstate{0};
+ Eff_CB effFunction;
+ void *intVstr; //internal value struct
+ SoundEffect(const char* name, Eff_CB cb, void* V_struct);
+};
+
+class Effects{
+public:
+	Effects(){};
+	void traverseList();
+private:
+	gain_Vstr internal_gain_Vstr;
+
+	SoundEffect effect_list[EFFECT_AMOUNT]{	{"gain effect", gain_effect, (void*)&internal_gain_Vstr},
+											{"dummy effect1", gain_effect, (void*)&internal_gain_Vstr},
+											{"dummy effect2", gain_effect, (void*)&internal_gain_Vstr}};
+};
+
+
+#endif

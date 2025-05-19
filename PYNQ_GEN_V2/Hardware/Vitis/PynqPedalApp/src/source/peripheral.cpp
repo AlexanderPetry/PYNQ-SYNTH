@@ -1,5 +1,9 @@
 #include "peripheral.h"
 namespace audio{
+
+	unsigned long Audio_Driver::u32DataL = 0;
+	unsigned long Audio_Driver::u32DataR = 0;
+
 	Audio_Driver::Audio_Driver(){
 		int Status;
 		IicConfig(XPAR_XIICPS_0_DEVICE_ID);
@@ -7,9 +11,7 @@ namespace audio{
 		AudioConfigureJacks();
 		LineinLineoutConfig();
 
-		 XScuTimer Scu_Timer;
 		 XScuTimer_Config *Scu_ConfigPtr;
-		 XScuGic IntcInstance;
 
 		 Scu_ConfigPtr = XScuTimer_LookupConfig(XPAR_PS7_SCUTIMER_0_DEVICE_ID);
 		 Status = XScuTimer_CfgInitialize(&Scu_Timer, Scu_ConfigPtr, Scu_ConfigPtr->BaseAddr);
@@ -46,25 +48,28 @@ namespace audio{
 		return XST_SUCCESS;
 	}
 
-	// Timer_ISR for sine generation (no LUT, our processor seems to be fast enough ;-) )
 	void
 	Audio_Driver::Timer_ISR(void * CallBackRef)
 	{
-		const float32_t frequency = 2222; //audio frequency to generate
-		const float32_t theta_increment = 2 * PI * frequency / SAMPLE_RATE;
-		static float32_t theta = 0.0f;
+
+		//const float32_t frequency = 2222; //audio frequency to generate
+		//const float32_t theta_increment = 2 * PI * frequency / SAMPLE_RATE;
+		//static float32_t theta = 0.0f;
 
 		XScuTimer *TimerInstancePtr = (XScuTimer *) CallBackRef;
 		XScuTimer_ClearInterruptStatus(TimerInstancePtr);
 
-		theta += theta_increment ;
-		if ( theta > 2* PI)
-			theta -= 2* PI;
+		//theta += theta_increment ;
+		//if ( theta > 2* PI)
+		//	theta -= 2* PI;
+		u32DataL = Xil_In32(I2S_DATA_RX_L_REG);
+		u32DataR = Xil_In32(I2S_DATA_RX_R_REG);
 
 		//float sine_value = sinf(theta); // non CMSIS function comment out for using
-		float32_t sine_value = arm_sin_f32(theta); // CMSIS function
-		uint32_t scaled_value = (uint32_t)(((sine_value + 1.0f) * 0.5f) * UINT_SCALED_MAX_VALUE);
-		Xil_Out32(I2S_DATA_TX_R_REG, scaled_value);
+		//float32_t sine_value = arm_sin_f32(theta); // CMSIS function
+		//uint32_t scaled_value = (uint32_t)(((sine_value + 1.0f) * 0.5f) * UINT_SCALED_MAX_VALUE);
+		Xil_Out32(I2S_DATA_TX_R_REG, u32DataR);
+		Xil_Out32(I2S_DATA_TX_L_REG, u32DataL);
 	}
 }
 
@@ -117,3 +122,58 @@ Rotary_enc::GetSate(){
 
 	return state;
 }
+
+Switch_arr::Switch_arr(){
+	XGpio_Initialize(&SW, XPAR_AXI_GPIO_1_DEVICE_ID);
+	XGpio_SetDataDirection(&SW, 2, 0xFFFFF);
+	u8 tmp = XGpio_DiscreteRead(&SW, 2);
+	PS_[0] = tmp;
+	PS_[1] = tmp;
+
+}
+
+u8
+Switch_arr::SWx_State(u8 sw){
+	if(sw > 3 || sw < 1 ) return 0;
+	u8 idx = sw-1;
+
+	u8 tmp = XGpio_DiscreteRead(&SW, 2);
+	CS_[idx] = ( tmp >> (idx) ) & 0x1;
+
+	u8 ret = (PS_[idx] != CS_[idx]) ?
+			(CS_[idx] ? ON_Changed : OFF_Changed) :
+			(CS_[idx] ? ON_Stable : OFF_Stable);
+
+	PS_[idx] = CS_[idx];
+
+	return ret;
+}
+
+
+Button_Array::Button_Array(){
+	XGpio_Initialize(&BTNS, XPAR_AXI_GPIO_1_DEVICE_ID);
+	XGpio_SetDataDirection(&BTNS, 1, 0xFFFFF);
+	u8 tmp = XGpio_DiscreteRead(&BTNS, 1);
+	PS_[0] = tmp;
+	PS_[1] = tmp;
+	PS_[2] = tmp;
+	PS_[3] = tmp;
+}
+
+u8
+Button_Array::BTNx_State(u8 idx){
+	if(idx > 4 || idx < 1 ) return 0;
+	idx = idx-1;
+
+	u8 tmp = XGpio_DiscreteRead(&BTNS, 1);
+	CS_[idx] = ( tmp >> (idx) ) & 0x1;
+
+	u8 ret = (PS_[idx] != CS_[idx]) ?
+			(CS_[idx] ? ON_Changed : OFF_Changed) :
+			(CS_[idx] ? ON_Stable : OFF_Stable);
+
+	PS_[idx] = CS_[idx];
+
+	return ret;
+}
+

@@ -1,0 +1,6 @@
+#include "logic.h"
+
+float32_t gain_effect(float32_t sample, void* params2) {
+	float gain = *(float*)params;
+    return sample * gain;
+}

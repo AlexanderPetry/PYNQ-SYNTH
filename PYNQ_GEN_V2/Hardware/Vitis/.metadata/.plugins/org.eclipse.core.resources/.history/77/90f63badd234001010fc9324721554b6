@@ -1,0 +1,11 @@
+#include "logic.h"
+
+Effects::Effects(){
+	size_t eff_count = sizeof(effect_list)/ sizeof(SoundEffect);
+	for()
+}
+
+float32_t gain_effect(float32_t sample, void* params2) {
+	float gain = *(float*)params;
+    return sample * gain;
+}

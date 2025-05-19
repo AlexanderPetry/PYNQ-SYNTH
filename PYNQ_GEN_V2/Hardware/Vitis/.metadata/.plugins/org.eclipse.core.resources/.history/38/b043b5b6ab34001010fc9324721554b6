@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<sdkproject:SdkProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" name="test_sine_app" location="M:/projects/clones/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/test_sine_app" platform="M:/projects/clones/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/vincent_xsa/export/vincent_xsa/vincent_xsa.xpfm" platformUID="xilinx:pynq-z2::0.0(custom)" systemProject="test_sine_app_system" sysConfig="vincent_xsa" runtime="C/C++" cpu="standalone_domain" cpuInstance="ps7_cortexa9_0" os="standalone" mssSignature="8d7de4fd05ed624ba7620745b05b3161">
+  <configuration name="Debug" id="xilinx.gnu.armv7.exe.debug.2114236105">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+    <lastBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <configuration name="Release" id="xilinx.gnu.armv7.exe.release.86979085" dirty="true">
+    <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
+  </configuration>
+  <template appTemplateName="hello_world"/>
+</sdkproject:SdkProject>

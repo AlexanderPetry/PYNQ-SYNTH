@@ -46,11 +46,47 @@ private:
 
 	static void Timer_ISR(void * CallBackRef);
 	static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
-	unsigned long u32DataL{0}, u32DataR{0};
+
+	XScuTimer Scu_Timer;
+	XScuGic IntcInstance;
+	static unsigned long u32DataL;
+	static unsigned long u32DataR;
 };
 
 }
+class Button_Array{
+public:
+	enum RE_STATE{
+			OFF_Changed,
+			ON_Changed,
+			ON_Stable,
+			OFF_Stable
+		};
+	u8 BTNx_State(u8 idx);
+	static Button_Array& instance(){ static Button_Array BTA; return BTA; }
+private:
+	Button_Array();
+	u8 PS_[4]{0,0,0,0};
+	u8 CS_[4]{0,0,0,0};
+	XGpio BTNS;
+};
 
+class Switch_arr{
+public:
+	enum RE_STATE{
+			OFF_Changed,
+			ON_Changed,
+			ON_Stable,
+			OFF_Stable
+		};
+	u8 SWx_State(u8 sw);
+	static Switch_arr& instance(){ static Switch_arr SWA; return SWA; }
+private:
+	Switch_arr();
+	u8 PS_[2]{0,0};
+	u8 CS_[2]{0,0};
+	XGpio SW;
+};
 
 class UART{
 public:

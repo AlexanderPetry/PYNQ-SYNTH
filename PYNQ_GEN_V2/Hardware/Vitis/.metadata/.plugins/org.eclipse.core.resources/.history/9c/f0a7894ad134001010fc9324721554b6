@@ -1,0 +1,16 @@
+#ifndef LOGIC_H
+#define LOGIC_H
+
+typedef float32_t(*Eff_CB)(float32 sample);
+
+struct SoundEffect{
+ char name[20]={""};
+ Eff_CB effect_function;
+};
+class Effects{
+public:
+	void addeffect();
+private:
+};
+
+#endif

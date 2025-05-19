@@ -1,0 +1,27 @@
+#ifndef LOGIC_H
+#define LOGIC_H
+
+#include "arm_math.h"
+#include "arm_const_structs.h"
+
+typedef float float32_t;
+typedef float32_t(*Eff_CB)(float32_t sample, void* params2);
+
+float32_t gain_effect(float32_t sample, void* params2);
+
+struct SoundEffect{
+ char name[20]={""};
+ Eff_CB effect_function;
+ void *internal_Vstruct;
+ SoundEffect(const char* name, Eff_CB cb);
+};
+
+class Effects{
+public:
+	Effects(){};
+private:
+	SoundEffect effect_list[2]{	{"gain effect", gain_effect},
+								{"gain effect", gain_effect}};
+};
+
+#endif

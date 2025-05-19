@@ -1,0 +1,14 @@
+#include "logic.h"
+
+SoundEffect::SoundEffect(const char* name, Eff_CB cb): effect_function(cb) { strncpy(name, name_, sizeof(name));
+ 	 	 	name[sizeof(name) - 1] = '\0';
+ 	 }
+
+Effects::Effects(){
+	effect_list[0] = {"gain effect", gain_effect};
+}
+
+float32_t gain_effect(float32_t sample, void* params2) {
+	float gain = *(float*)params;
+    return sample * gain;
+}

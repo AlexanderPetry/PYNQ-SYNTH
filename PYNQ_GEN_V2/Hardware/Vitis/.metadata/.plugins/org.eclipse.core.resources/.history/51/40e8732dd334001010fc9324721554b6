@@ -1,0 +1,21 @@
+#ifndef LOGIC_H
+#define LOGIC_H
+
+typedef float32_t(*Eff_CB)(float32 sample, void* params2);
+
+struct SoundEffect{
+ char name[20]={""};
+ Eff_CB effect_function;
+ 	 SoundEffect(char name_[20],Eff_CB cb): name{name_};
+};
+
+class Effects{
+public:
+	Effects();
+private:
+	SoundEffect effect_list[2]{};
+};
+
+float32_t gain_effect(float32_t sample, void* params2);
+
+#endif
