@@ -1,0 +1,19 @@
+#include "instrument.hpp"
+#include "voice.hpp"
+
+class piano : public instrument {
+public:
+	piano() = default;
+    voice createVoice(uint8_t note, uint8_t velocity) const override {
+        float freq = MIDI::ToFreq(note);
+        float amp = velocity / 127.0f;
+
+        voice v;
+        v.addSignal(signal(signal::SINE,     freq,       0.8f * amp));
+        v.addSignal(signal(signal::SINE, 2 * freq,       0.3f * amp));
+        v.addSignal(signal(signal::SINE, 3 * freq + 1.5f, 0.1f * amp));
+        v.env = voice::Envelope{0.01f, 0.2f, 0.0f, 0.4f};
+        v.play();
+        return v;
+    }
+};

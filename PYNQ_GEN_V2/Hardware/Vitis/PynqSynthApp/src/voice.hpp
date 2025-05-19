@@ -8,12 +8,24 @@ public:
 	void play();
 	void stop();
 	bool isActive() const;
-	float nextSample(float sampleRate);
+	float nextSample(float globalPhase, float baseFreq);
 	void addSignal(signal s);
 	void clear();
 	std::vector<signal> signals;
 
-private:
-	bool active = false;
+	enum class EnvState { Idle, Attack, Decay, Sustain, Release };
+	void updateEnvelope(float deltaTime);
+
+	struct Envelope{
+	    float attackTime = 0.01f;      // Fast, percussive strike
+	    float decayTime = 0.3f;        // Moderate decay
+	    float sustainLevel = 0.0f;     // No sustain (natural piano behavior)
+	    float releaseTime = 0.4f;      // Smooth fade if key released early
+	    float amplitude = 0.0f;
+	    EnvState state = EnvState::Idle;
+	} env;
+
+
+
 
 };

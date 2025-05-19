@@ -1,0 +1,7 @@
+#pragma once
+
+class instrument {
+public:
+	instrument();
+    virtual voice createVoice(uint8_t note, uint8_t velocity) const = 0;
+};

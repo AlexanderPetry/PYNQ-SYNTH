@@ -20,20 +20,28 @@
 #include "xgpio.h"
 #include "audio.h"
 #include "utils.h"
+#include <memory>
 
 #include <map>
+#include <algorithm>
+
+#include "piano.hpp"
+#include "synth.hpp"
+#include "guitar.hpp"
+#include "organ.hpp"
+
 
 #define TIMER_DEVICE_ID      XPAR_XSCUTIMER_0_DEVICE_ID
 #define TIMER_IRPT_INTR      XPAR_SCUTIMER_INTR
 #define SAMPLE_RATE          48000
-#define UINT_SCALED_MAX_VALUE 0xFFFFFF
+#define UINT_SCALED_MAX_VALUE 0x7FFFFF
 #define INTC_DEVICE_ID		XPAR_SCUGIC_SINGLE_DEVICE_ID
 
-
+#define BASE_FREQUENCY 		1.0f
 
 XScuTimer Timer;
 XScuGic Intc;
-std::vector<voice> voices;
+std::vector<std::unique_ptr<voice>> voices;
 
 static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
 static void Timer_ISR(void *CallBackRef);
@@ -68,54 +76,91 @@ int main()
 	XScuTimer_EnableAutoReload(&Scu_Timer);
 	XScuTimer_Start(&Scu_Timer);
 
-	voices.emplace_back();
-	// Only once
-	std::map<int, int> activeVoices; // key: note, value: index in voices
+	std::map<int, voice*> activeVoices;
+	std::unique_ptr<instrument> currentInstrument = std::make_unique<piano>();
+
+	signal::Type cu_instrument_wave = signal::SINE;
+	voice::Envelope cu_instrument_env = voice::Envelope{0.01f, 0.2f, 0.0f, 0.4f};
 
 	uint8_t midiMsg[3];
 	int midiState = 0;
 
 	while (1) {
-		uint8_t byte;
-		if (XUartPs_Recv(&Uart_Ps, &byte, 1) == 1) {
-			if (byte & 0x80) { // Status byte
-				if ((byte & 0xF0) == 0x90 || (byte & 0xF0) == 0x80) {
-					midiMsg[0] = byte;
-					midiState = 1;
-				} else {
-					midiState = 0; // Unsupported status
-				}
-			} else {
-				if (midiState == 1) {
-					midiMsg[1] = byte;
-					midiState = 2;
-				} else if (midiState == 2) {
-					midiMsg[2] = byte;
-					midiState = 0;
+	    uint8_t byte;
+	    if (XUartPs_Recv(&Uart_Ps, &byte, 1) == 1) {
+	        if (byte & 0x80) {
+	            if ((byte & 0xF0) == 0x90 || (byte & 0xF0) == 0x80 || (byte & 0xF0) == 0xB0) {
+	                midiMsg[0] = byte;
+	                midiState = 1;
+	            } else {
+	                midiState = 0;
+	            }
+	        } else {
+	            if (midiState == 1) {
+	                midiMsg[1] = byte;
+	                midiState = 2;
+	            } else if (midiState == 2) {
+	                midiMsg[2] = byte;
+	                midiState = 0;
 
-					uint8_t status = midiMsg[0] & 0xF0;
-					uint8_t note = midiMsg[1];
-					uint8_t velocity = midiMsg[2];
+	                uint8_t status = midiMsg[0] & 0xF0;
+	                uint8_t data1 = midiMsg[1];
+	                uint8_t data2 = midiMsg[2];
 
-					if (status == 0x90 && velocity > 0) {
-						signal s(signal::SINE, MIDI::ToFreq(note), velocity / 127.0f, 0.5f);
-						voice v;
-						v.addSignal(s);
-						v.play();
-						voices.push_back(v);
-						activeVoices[note] = voices.size() - 1;
-					} else if (status == 0x80 || (status == 0x90 && velocity == 0)) {
-						auto it = activeVoices.find(note);
-						if (it != activeVoices.end()) {
-							voices[it->second].stop();
-							voices.erase(voices.begin() + it->second);
-							activeVoices.erase(it);
-						}
+	                if (status == 0x90 && data2 > 0)
+	                {
+	                    if (auto* c = dynamic_cast<custom*>(currentInstrument.get())) {
+	                        c->updateParams(cu_instrument_wave, cu_instrument_env.attackTime, cu_instrument_env.decayTime, cu_instrument_env.sustainLevel, cu_instrument_env.releaseTime);
+	                    }
+	                    voices.emplace_back(std::make_unique<voice>(currentInstrument->createVoice(data1, data2)));
+	                    activeVoices[data1] = voices.back().get();
+	                }
+	                else if (status == 0x80 || (status == 0x90 && data2 == 0))
+	                {
+	                    auto it = activeVoices.find(data1);
+	                    if (it != activeVoices.end()) {
+	                        it->second->stop();
+	                    }
+	                }
+	                else if (status == 0xB0 && data1 == 0x00)
+	                {
+	                    switch (data2)
+	                    {
+	                        case 0: currentInstrument = std::make_unique<piano>(); break;
+	                        case 1: currentInstrument = std::make_unique<synth>(); break;
+	                        case 2: currentInstrument = std::make_unique<organ>(); break;
+	                        case 3: currentInstrument = std::make_unique<guitar>(); break;
+	                        case 4: currentInstrument = std::make_unique<custom>(); break;
+	                        default: break;
+	                    }
+	                    xil_printf("Instrument changed to ID %d\r\n", data2);
+	                }
+	                else if (status == 0x12 && data1 == 0x00)
+	                {
+	                	signal::Type wave;
+	                	switch (data2)
+	                	{
+	                	case 0: wave signal::SINE;
+	                	case 0: wave signal::SQUARE;
+	                	case 0: wave signal::SAW;
+	                	case 0: wave signal::TRIANGLE;
+	                	}
+	                	cu_instrument_wave = wave;
+	                }
+	                else if (status == 0x15)
+	                {
+	                	cu_instrument_env.attackTime = data1;
+	                	cu_instrument_env.decayTime = data2;
+	                }
+	                else if (status == 0x20)
+					{
+						cu_instrument_env.sustainLevel = data1;
+						cu_instrument_env.releaseTime = data2;
 					}
-				}
-			}
-		}
-		usleep(1000);
+	            }
+	        }
+	    }
+	    usleep(1000);
 	}
 
 
@@ -128,13 +173,32 @@ int main()
 
 static void Timer_ISR(void *CallBackRef)
 {
+
+	float deltaTime = 1.0f / SAMPLE_RATE;
+	static float globalPhase = 0.0f;
+	globalPhase += 2.0f * M_PI * BASE_FREQUENCY / SAMPLE_RATE ;
+	if (globalPhase >= 2.0f * M_PI) globalPhase -= 2.0f * M_PI;
+
 	float sample = 0.0f;
-	for (voice& v : voices) {
-	    if (v.isActive())
-	        sample += v.nextSample(SAMPLE_RATE );
+	for (auto& ptr : voices) {
+		voice& v = *ptr;
+	    if (v.isActive()){
+	    	v.updateEnvelope(deltaTime);
+	        sample += v.nextSample(globalPhase, BASE_FREQUENCY);
+	    }
 	}
-	sample = fmaxf(fminf(sample, 1.0f), -1.0f);
-	uint32_t scaled = static_cast<uint32_t>(((sample + 1.0f) * 0.5f) * UINT_SCALED_MAX_VALUE);
+
+	voices.erase(
+	    std::remove_if(voices.begin(), voices.end(),
+	        [](const std::unique_ptr<voice>& v) { return !v->isActive(); }),
+	    voices.end()
+	);
+	//int voiceCount = voices.size();
+
+	//if (voiceCount > 0) sample /= voiceCount;
+
+	sample = fmaxf(fminf(sample, +1.0f), -1.0f);
+	uint32_t scaled = static_cast<uint32_t>(((sample))* UINT_SCALED_MAX_VALUE);
 	Xil_Out32(I2S_DATA_TX_L_REG, scaled);
 	Xil_Out32(I2S_DATA_TX_R_REG, scaled);
 

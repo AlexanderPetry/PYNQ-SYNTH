@@ -3,15 +3,12 @@ class signal
 {
 public:
 	enum Type { SINE, SQUARE, SAW, TRIANGLE };
-	signal(Type type, float frequency, float phase, float amplitude);
+	signal(Type type, float frequency, float amplitude);
 
-    float nextSample(float sampleRate);
+    float nextSample(float globalFrequency, float baseFrequency);
     void setFrequency(float freq);
     void reset();
-
-private:
 	Type type;
 	float frequency;
-	float phase;
 	float amplitude;
 };

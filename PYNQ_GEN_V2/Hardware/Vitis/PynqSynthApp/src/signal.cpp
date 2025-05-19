@@ -1,32 +1,36 @@
 #include "signal.hpp"
 #include <cmath>
 #include "arm_math.h"
+#include "xil_printf.h"
 
 #ifndef M_PI
 static constexpr float M_PI = 3.14159265358979323846f;
 #endif
 
-signal::signal(Type type, float frequency, float phase, float amplitude)
-    : type(type), frequency(frequency), phase(phase), amplitude(amplitude) {}
+signal::signal(Type type, float frequency, float amplitude)
+    : type(type), frequency(frequency), amplitude(amplitude)
+{
+	xil_printf("freq: %i at Ampl: %i\r\n", (int)frequency), (int)(amplitude);
+}
 
 void signal::setFrequency(float freq) {
     frequency = freq;
 }
 
 void signal::reset() {
-    phase = 0.0f;
+    //phase = 0.0f;
 }
 
-float signal::nextSample(float sampleRate) {
+float signal::nextSample(float globalFrequency, float baseFrequency) {
     float sample = 0.0f;
-    float phaseIncrement = 2.0f * M_PI * frequency / sampleRate;
+    //float phaseIncrement = 2.0f * M_PI * frequency / sampleRate;
+    float phase = globalFrequency * (frequency / baseFrequency );
 
     switch (type) {
         case SINE:
-        	//sample = arm_sin_f32(phase)* 0.5;
         	sample = std::sin(phase);
             break;
-        /*case SQUARE:
+        case SQUARE:
             sample = (std::fmod(phase, 1.0f) < 0.5f) ? 1.0f : -1.0f;
             break;
         case SAW:
@@ -34,11 +38,9 @@ float signal::nextSample(float sampleRate) {
             break;
         case TRIANGLE:
             sample = 2.0f * std::abs(2.0f * (phase - std::floor(phase + 0.5f))) - 1.0f;
-            break;*/
+            break;
     }
 
-	phase += phaseIncrement;
-	if (phase >= 2.0f * M_PI) phase -= 2.0f * M_PI;
 
     return sample * amplitude;
 }

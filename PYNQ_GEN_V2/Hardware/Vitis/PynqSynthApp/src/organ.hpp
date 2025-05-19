@@ -1,0 +1,19 @@
+#include "instrument.hpp"
+#include "voice.hpp"
+
+class organ : public instrument {
+public:
+    organ() = default;
+    voice createVoice(uint8_t note, uint8_t velocity) const override {
+        float freq = MIDI::ToFreq(note);
+        float amp = velocity / 127.0f;
+
+        voice v;
+        v.addSignal(signal(signal::SINE, freq,        0.5f * amp));
+        v.addSignal(signal(signal::SINE, freq * 2,    0.3f * amp));
+        v.addSignal(signal(signal::SINE, freq * 3,    0.2f * amp));
+        v.env = voice::Envelope{0.01f, 0.15f, 1.0f, 0.2f}; // Full sustain
+        v.play();
+        return v;
+    }
+};

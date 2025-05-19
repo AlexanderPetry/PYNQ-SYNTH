@@ -1,19 +1,20 @@
 import serial
 import keyboard
+import threading
 
 # Setup serial port
-ser = serial.Serial('COM4', 115200)
+ser = serial.Serial('COM4', 115200, timeout=0.01)
 
-# Map keys to MIDI notes (example: ASDF row)
+# Map keys to MIDI notes
 key_note_map = {
-    'a': 60,  # C4
-    's': 62,  # D4
-    'd': 64,  # E4
-    'f': 65,  # F4
-    'g': 67,  # G4
-    'h': 69,  # A4
-    'j': 71,  # B4
-    'k': 72,  # C5
+    'a': 60,
+    's': 62,
+    'd': 64,
+    'f': 65,
+    'g': 67,
+    'h': 69,
+    'j': 71,
+    'k': 72,
 }
 
 pressed = set()
@@ -23,6 +24,15 @@ def note_on(note):
 
 def note_off(note):
     ser.write(bytes([0x80, note, 0]))
+
+def uart_listener():
+    while True:
+        data = ser.read(64)
+        if data:
+            print("Received from PYNQ:", data)
+
+# Start UART listener thread
+threading.Thread(target=uart_listener, daemon=True).start()
 
 print("Press keys to play notes. Press ESC to quit.")
 

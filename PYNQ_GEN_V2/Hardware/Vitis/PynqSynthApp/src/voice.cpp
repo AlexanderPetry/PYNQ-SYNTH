@@ -1,7 +1,8 @@
 #include "voice.hpp"
 
 void voice::play() {
-    active = true;
+    env.state = EnvState::Attack;
+    env.amplitude = 0.0f;
 }
 
 void voice::addSignal(signal s) {
@@ -13,20 +14,57 @@ void voice::clear() {
 }
 
 void voice::stop() {
-    active = false;
-    signals.clear();
+    if (env.state != EnvState::Idle) {
+        env.state = EnvState::Release;
+    }
 }
 
 bool voice::isActive() const {
-    return active;
+	return env.state != EnvState::Idle;//return active;
 }
 
-float voice::nextSample(float sampleRate) {
-    if (!active) return 0.0f;
+float voice::nextSample(float globalPhase, float baseFreq) {
+	if (env.state == EnvState::Idle) return 0.0f;
 
     float sum = 0.0f;
     for (auto& s : signals) {
-        sum += s.nextSample(sampleRate);
+        sum += s.nextSample( globalPhase,  baseFreq);
     }
-    return sum;
+    return sum* env.amplitude;
+}
+
+void voice::updateEnvelope(float deltaTime) {
+    switch (env.state) {
+        case EnvState::Attack:
+            env.amplitude += deltaTime / env.attackTime;
+            if (env.amplitude >= 1.0f) {
+                env.amplitude = 1.0f;
+                env.state = EnvState::Decay;
+            }
+            break;
+
+        case EnvState::Decay:
+            env.amplitude -= deltaTime / env.decayTime;
+            if (env.amplitude <= env.sustainLevel) {
+                env.amplitude = env.sustainLevel;
+                env.state = EnvState::Sustain;
+            }
+            break;
+
+        case EnvState::Sustain:
+            // Hold steady at sustainLevel until stop() is called
+            break;
+
+        case EnvState::Release:
+            env.amplitude -= deltaTime / env.releaseTime;
+            if (env.amplitude <= 0.0f) {
+                env.amplitude = 0.0f;
+                env.state = EnvState::Idle;
+            }
+            break;
+
+        case EnvState::Idle:
+            clear();
+            break;
+    }
 }

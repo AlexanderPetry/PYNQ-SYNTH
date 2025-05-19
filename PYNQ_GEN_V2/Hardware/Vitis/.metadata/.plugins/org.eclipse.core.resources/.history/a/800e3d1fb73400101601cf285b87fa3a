@@ -1,0 +1,4 @@
+class instrument {
+public:
+    virtual voice createVoice(uint8_t note, uint8_t velocity) const = 0;
+};
