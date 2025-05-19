@@ -1,0 +1,70 @@
+#include "peripheral.h"
+
+Audio_Driver::Audio_Driver(){
+	int Status;
+	IicConfig(XPAR_XIICPS_0_DEVICE_ID);
+	AudioPllConfig();
+	AudioConfigureJacks();
+	LineinLineoutConfig();
+
+	 XScuTimer Scu_Timer;
+	 XScuTimer_Config *Scu_ConfigPtr;
+	 XScuGic IntcInstance;
+
+	 Scu_ConfigPtr = XScuTimer_LookupConfig(XPAR_PS7_SCUTIMER_0_DEVICE_ID);
+	 	  Status = XScuTimer_CfgInitialize(&Scu_Timer, Scu_ConfigPtr, Scu_ConfigPtr->BaseAddr);
+	 	  Status = Timer_Intr_Setup(&IntcInstance, &Scu_Timer, XPS_SCU_TMR_INT_ID);
+	 	  XScuTimer_LoadTimer(&Scu_Timer,(XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)/(SAMPLE_RATE));
+	 	  XScuTimer_EnableAutoReload(&Scu_Timer);
+	 	  XScuTimer_Start(&Scu_Timer);
+}
+
+UART::UART(){
+	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
+	XUartPs_CfgInitialize(&Uart_Ps, Config, Config->BaseAddress);
+	XUartPs_SetBaudRate(&Uart_Ps, 115200);
+}
+
+Rotary_enc::Rotary_enc(){
+	XGpio_Initialize(&rotary, XPAR_AXI_GPIO_0_DEVICE_ID);
+	XGpio_SetDataDirection(&rotary, 1, 0xFFFFFFFF);  // all inputs
+	PS = Getvalue();
+}
+
+Rotary_enc::RE_STATE
+Rotary_enc::GetSate(){
+	u32 CS = Getvalue();
+	RE_STATE state{IDLE};
+
+	if(CS == 0b111){
+	   switch(PS){
+	       case 0b110:
+	        	if(debounce){
+	        			debounce = 0;
+	        	}else {
+	        		debounce= 1;
+	        		xil_printf("button\r\n");
+	        		state = BUTTON;
+	        	}
+				break;
+
+			case 0b011:
+				I32increment(counter,1);
+				xil_printf("rechts, %d\r\n",counter);
+				state = RIGHT;
+				break;
+
+			case 0b101:
+				I32decrement(counter,1);
+				xil_printf("links, %d\r\n",counter);
+				state = LEFT;
+				break;
+
+			default:
+				break;
+	        }
+	}
+	PS = CS;
+
+	return state;
+}

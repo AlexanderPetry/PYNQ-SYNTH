@@ -1,0 +1,80 @@
+#ifndef PERIPHERAL_H
+#define PERIPHERAL_H
+
+#include "xuartps.h"
+#include "xgpio.h"
+#include "stdio.h"
+
+#include "xgpio.h"
+#include "xparameters.h"
+#include "sleep.h"
+
+#define INT_MAX 2147483647
+#define INT_MIN -2147483648
+
+#define I32increment(v, a) \
+    do { \
+        if ((a) > 0 && (v) > INT_MAX - (a)) \
+            (v) = INT_MAX; \
+        else if ((a) < 0 && (v) < INT_MIN - (a)) \
+            (v) = INT_MIN; \
+        else \
+            (v) += (a); \
+    } while (0)
+
+#define I32decrement(v, a) I32increment((v), -(a))
+
+namespace audio{
+
+#define UINT32_MAX_AS_FLOAT 4294967295.0f //(2^32 - 1
+#define UINT_SCALED_MAX_VALUE 0xFFFFF // 2^24 =>24 bits audio codec maximum value is 0xFF FFFF
+
+#define TIMER_DEVICE_ID		XPAR_XSCUTIMER_0_DEVICE_ID
+#define INTC_DEVICE_ID		XPAR_SCUGIC_SINGLE_DEVICE_ID
+#define TIMER_IRPT_INTR		XPAR_SCUTIMER_INTR
+
+class Audio_Driver{
+public:
+	static Audio_Driver& instance(){ static Audio_Driver AD; return AD; }
+private:
+	Audio_Driver();
+	u16 SampleR{48000};
+};
+
+}
+
+
+class UART{
+public:
+	static UART& instance(){ static UART uart; return uart; }
+private:
+	UART();
+	XUartPs Uart_Ps;
+};
+
+class Rotary_enc{
+public:
+	enum RE_STATE{
+		LEFT,
+		RIGHT,
+		BUTTON,
+		IDLE
+	};
+
+	RE_STATE GetSate();
+	u32 GetCounter(){return counter;}
+	void SetCounter(u32 v){counter = v;}
+
+	static Rotary_enc& instance(){static Rotary_enc RE; return RE; };
+private:
+	Rotary_enc();
+
+	u32 Getvalue(){ return XGpio_DiscreteRead(&rotary, 1); }
+
+	XGpio 	rotary;
+	int 	counter{0};
+	u8 		debounce{1};
+	u32 	PS{0};
+	u32 	CS{0};
+};
+#endif

@@ -1,7 +1,7 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
-configDescList=org.eclipse.launchbar.core.descriptorType.default\:Debugger_PynqPedalApp-Default
+configDescList=org.eclipse.launchbar.core.descriptorType.default\:Debugger_test_sine_app-Default,org.eclipse.launchbar.core.descriptorType.default\:Debugger_PynqPedalApp-Default
 eclipse.preferences.version=1
 org.eclipse.launchbar.core.descriptorType.default\:Debugger_PynqPedalApp-Default/activeLaunchMode=debug
 org.eclipse.launchbar.core.descriptorType.default\:Debugger_PynqPedalApp-Default/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
@@ -10,3 +10,5 @@ org.eclipse.launchbar.core.descriptorType.default\:Debugger_PynqSynthApp-Default
 org.eclipse.launchbar.core.descriptorType.default\:Debugger_PynqSynthApp-Default_10/activeLaunchMode=debug
 org.eclipse.launchbar.core.descriptorType.default\:Debugger_PynqSynthApp-Default_14/activeLaunchMode=run
 org.eclipse.launchbar.core.descriptorType.default\:Debugger_PynqSynthApp-Default_15/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:Debugger_test_sine_app-Default/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:Debugger_test_sine_app-Default/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local

@@ -1,0 +1,18 @@
+#include "platform.h"
+#include "peripheral.h"
+#include "audio.h"
+
+
+int main() {
+	init_platform();
+
+	UART uart{ UART::instance() };
+	Rotary_enc Rot_enc{ Rotary_enc::instance() };
+
+    while (1) {
+    }
+    cleanup_platform();
+    return 0;
+}
+
+

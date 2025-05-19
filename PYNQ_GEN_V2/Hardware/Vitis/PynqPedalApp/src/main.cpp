@@ -1,21 +1,19 @@
 #include "platform.h"
 #include "peripheral.h"
 
-
-
+using audio::Audio_Driver;
 
 int main() {
 	init_platform();
 
 	UART uart{ UART::instance() };
+	Audio_Driver audio{ Audio_Driver::instance()};
 	Rotary_enc Rot_enc{ Rotary_enc::instance() };
 
     while (1) {
-    	Rot_enc.GetSate();
-    	usleep(10);
     }
+    cleanup_platform();
     return 0;
 }
-
 
 
