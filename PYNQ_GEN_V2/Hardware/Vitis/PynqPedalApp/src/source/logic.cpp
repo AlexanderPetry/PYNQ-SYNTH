@@ -21,7 +21,6 @@ Effects::traverseList(){
 			displayed_message =1;
 		}
 
-
 		btn_mask = 0;
 		//check for ON_Changed event on buttons
 		for (u8 i = 1; i <= total_btns; ++i) {
@@ -43,7 +42,9 @@ Effects::traverseList(){
 					 	 xil_printf("nothing set for this keybind\r\n");
 					break;
 				case 4://[btn2]
+						usleep(500000);
 					 	 xil_printf("selecting effect from list\r\n");
+					 	 effect_list[idx].effFunction(0.f, effect_list[idx].intVstr);
 					 	 displayed_message =0;
 					break;
 				case 8://[btn1]
@@ -83,7 +84,7 @@ unsigned long
 Effects::perform(unsigned long audioIn){
 	float sample = raw_to_float(audioIn);
 	gain_Vstr* gainVstructPtr = (gain_Vstr*)effect_list[0].intVstr;
-	sample = effect_list[0].effFunction(sample, gainVstructPtr);
+	sample = sample * gainVstructPtr->gain;//sample * 1;//;
 	return float_to_raw(sample);
 }
 
@@ -101,7 +102,7 @@ float32_t gain_effect(float32_t sample, void* params) {
 	s32 last_counter = Rot_enc.GetCounter();
 
 	while(1){
-
+		Rot_enc.GetSate();
 		s32 current_counter = Rot_enc.GetCounter();
 		s32 delta = current_counter - last_counter;
 	    last_counter = current_counter;
@@ -110,7 +111,11 @@ float32_t gain_effect(float32_t sample, void* params) {
 	    	paramptr->gain += 0.05f * delta;
 	    	if (paramptr->gain < 0) paramptr->gain = 0;
 	    	if (paramptr->gain > 2) paramptr->gain = 2;
-	    	__CLEAR_SCREEN__ xil_printf("gain = %.2f\r\n", paramptr->gain);
+
+	    	//int int_part = (int)paramptr->gain;
+	    	//int frac_part = (int)((paramptr->gain - int_part) * 100);
+
+	    	__CLEAR_SCREEN__ printf("gain = %f\r\n", paramptr->gain);
 	    }
 
 		btn_mask = 0;
@@ -129,10 +134,12 @@ float32_t gain_effect(float32_t sample, void* params) {
 				case 2://[btn3]
 						__CLEAR_SCREEN__ xil_printf("user discarted changes\r\n");
 						*paramptr = GVstr_CPY;
+						usleep(500000);
 						return 0.f; //idk will see if return value should be applied or static global or something
 					break;
 				case 4://[btn2]
-						__CLEAR_SCREEN__ xil_printf("gain confirmed = %.2f\r\n", paramptr->gain);
+						__CLEAR_SCREEN__ printf("gain confirmed = %f\r\n", paramptr->gain);
+						usleep(500000);
 						return 0.f;
 					break;
 				case 8://[btn1]
