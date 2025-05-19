@@ -1,0 +1,111 @@
+#include "logic.h"
+
+void
+Effects::traverseList(){
+	constexpr u8 total_btns = 4;
+
+	Rotary_enc Rot_enc{ Rotary_enc::instance() };
+	Switch_arr SW_ARR{ Switch_arr::instance() };
+	Button_Array BTN_ARR{ Button_Array::instance() };
+
+	u8 btn_mask{0};//[btn1][btn2][btn3][btn4]
+	u8 sw1{0};
+	u16 idx{0};
+	u8 displayed_message{0};
+	while (1){
+		sw1 = SW_ARR.SWx_State(2);
+		if(sw1 != Switch_arr::RE_STATE::ON_Stable) continue;
+
+		if (!displayed_message){
+			__CLEAR_SCREEN__ xil_printf("currently hovered over effect [-- %s --]\r\n",effect_list[idx].EffName);
+			displayed_message =1;
+		}
+
+
+		btn_mask = 0;
+		//check for ON_Changed event on buttons
+		for (u8 i = 1; i <= total_btns; ++i) {
+		    btn_mask <<= 1;
+		    if (BTN_ARR.BTNx_State(i) == Button_Array::RE_STATE::ON_Changed){
+		        btn_mask |= 0x1;
+		    }
+		}
+
+		//one of the buttons generated an event
+		if (btn_mask & 0xF) {
+			switch(btn_mask){
+				case 1://[btn4
+						idx = (idx + EFFECT_AMOUNT - 1) % EFFECT_AMOUNT; //circular rotation for effect list]
+						__CLEAR_SCREEN__ xil_printf("decrementing effect list\r\n");
+						xil_printf("currently hovered over effect [-- %s --]\r\n",effect_list[idx].EffName);
+					break;
+				case 2://[btn3]
+					 	 xil_printf("nothing set for this keybind\r\n");
+					break;
+				case 4://[btn2]
+					 	 xil_printf("selecting effect from list\r\n");
+					 	 displayed_message =0;
+					break;
+				case 8://[btn1]
+						idx = (idx + 1) % EFFECT_AMOUNT; //circular rotation for effect list
+						__CLEAR_SCREEN__ xil_printf("incrementing effect list\r\n");
+					 	 xil_printf("currently hovered over effect [-- %s --]\r\n",effect_list[idx].EffName);
+					break;
+
+				default:
+					break;
+			}
+
+		}
+		usleep(10000);
+	}
+}
+
+SoundEffect::SoundEffect(const char* name_, Eff_CB cb, void* V_struct) : effFunction(cb), intVstr(V_struct) {
+    strncpy(EffName, name_, sizeof(EffName));
+    EffName[sizeof(EffName) - 1] = '\0';
+}
+
+float32_t gain_effect(float32_t sample, void* params) {
+	Rotary_enc Rot_enc{ Rotary_enc::instance() };
+	Button_Array BTN_ARR{ Button_Array::instance() };
+
+	u8 btn_mask{0};
+	u8 Rot_enc_mask{0};
+
+	while(1){
+		btn_mask = 0;
+
+		//check for ON_Changed event on buttons
+		for (u8 i = 1; i <= total_btns; ++i) {
+			btn_mask <<= 1;
+			if (BTN_ARR.BTNx_State(i) == Button_Array::RE_STATE::ON_Changed){
+				btn_mask |= 0x1;
+			}
+		}
+
+		if (btn_mask & 0xF) {
+			switch(btn_mask){
+				case 1://[btn4
+					break;
+				case 2://[btn3]
+						xil_printf("user discarted changes\r\n");
+						return 0f; //idk will see if return value should be applied or static global or something
+					break;
+				case 4://[btn2]
+					break;
+				case 8://[btn1]
+					break;
+				default:
+					break;
+			}
+		}
+
+
+
+
+	gain_Vstr* paramptr{ (gain_Vstr*)params };
+	paramptr->gain = *(float*)params;
+
+    return sample * paramptr->gain;
+}

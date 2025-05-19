@@ -1,0 +1,17 @@
+#include "platform.h"
+#include "logic.h"
+using audio::Audio_Driver;
+
+int main() {
+	init_platform();
+
+	UART uart{ UART::instance() };
+	Audio_Driver audio{ Audio_Driver::instance()};
+	Effects eff_instance{ Effects::instance() };
+
+	eff_instance.traverseList();
+
+    cleanup_platform();
+    return 0;
+}
+

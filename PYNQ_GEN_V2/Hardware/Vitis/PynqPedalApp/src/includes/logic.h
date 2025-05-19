@@ -4,16 +4,18 @@
 #include "arm_math.h"
 #include "arm_const_structs.h"
 #include "xil_types.h"
+#include "peripheral.h"
 
 #define EFFECT_AMOUNT 3
+#define __CLEAR_SCREEN__ xil_printf("\x1B[2J\x1B[H\n");
 typedef float float32_t;
-typedef float32_t(*Eff_CB)(float32_t sample, void* params2);
+typedef float32_t(*Eff_CB)(float32_t sample, void* params);
 
 struct gain_Vstr{
 	float gain{0};
 };
 
-float32_t gain_effect(float32_t sample, void* params2);
+float32_t gain_effect(float32_t sample, void* params);
 
 struct SoundEffect{
  char EffName[20]={""};
@@ -25,9 +27,12 @@ struct SoundEffect{
 
 class Effects{
 public:
-	Effects(){};
 	void traverseList();
+	unsigned long perform(unsigned long audioIn);
+	static Effects& instance(){ static Effects eff; return eff; }
 private:
+	Effects(){};
+	void selectEvent();
 	gain_Vstr internal_gain_Vstr;
 
 	SoundEffect effect_list[EFFECT_AMOUNT]{	{"gain effect", gain_effect, (void*)&internal_gain_Vstr},
