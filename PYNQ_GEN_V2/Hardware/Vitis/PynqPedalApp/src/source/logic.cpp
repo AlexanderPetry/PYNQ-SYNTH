@@ -104,13 +104,17 @@ Effects::perform(unsigned long audioIn){
 
 	float echo_sample = delayed_sample;
 	if (internal_echo_Vstr.feedback > 0.0f) {
-	    echo_sample = sample + delayed_sample * internal_echo_Vstr.feedback;
-	    Sbuffer[buf_index] = echo_sample;
+		echo_sample = sample + delayed_sample * internal_echo_Vstr.feedback;
+		Sbuffer[buf_index] = echo_sample;
 	} else {
 	    Sbuffer[buf_index] = sample;
 	}
 
+
 	buf_index = (buf_index + 1) % DELAY_BUF_SIZE;
+
+	if (echo_sample > internal_distortion_Vstr.threshold) { echo_sample = internal_distortion_Vstr.threshold; }
+	else if (echo_sample < -internal_distortion_Vstr.threshold) { echo_sample = -internal_distortion_Vstr.threshold; }
 
 	mixed = echo_sample * internal_gain_Vstr.gain;
 
@@ -255,6 +259,59 @@ delay_effect(float32_t sample, void* params){
 
 	__UART_DELAY__
 	}
+}
+
+void
+distortion_effect(float32_t sample, void* params) {
+    constexpr u8 total_btns = 4;
+    Rotary_enc& Rot_enc{ Rotary_enc::instance() };
+    Button_Array& BTN_ARR{ Button_Array::instance() };
+
+    u8 btn_mask{0};
+    distortion_Vstr* paramptr{ (distortion_Vstr*)params };
+    distortion_Vstr DVstr_CPY = *paramptr;
+
+    s32 last_counter = Rot_enc.GetCounter();
+    float acc_threshold = paramptr->threshold;
+
+    while (1) {
+        Rot_enc.GetSate();
+        s32 current_counter = Rot_enc.GetCounter();
+        s32 delta = current_counter - last_counter;
+        last_counter = current_counter;
+
+        if (delta != 0) {
+            acc_threshold += 0.005f * delta;
+            if (acc_threshold < 0.0001f) acc_threshold = 0.0001f;
+            if (acc_threshold > 1.0f) acc_threshold = 1.0f;
+            paramptr->threshold = acc_threshold;
+
+            __CLEAR_SCREEN__ printf("Distortion Threshold = %f\r\n", paramptr->threshold);
+        }
+
+        btn_mask = 0;
+        for (u8 i = 1; i <= total_btns; ++i) {
+            btn_mask <<= 1;
+            if (BTN_ARR.BTNx_State(i) == Button_Array::RE_STATE::ON_Changed)
+                btn_mask |= 0x1;
+        }
+
+        if (btn_mask & 0xF) {
+            switch(btn_mask){
+                case 2:
+                    __CLEAR_SCREEN__ xil_printf("user discarded changes\r\n");
+                    *paramptr = DVstr_CPY;
+                    __DEBOUNCE__
+                    return;
+                case 4:
+                    __CLEAR_SCREEN__ printf("Distortion confirmed = %f\r\n", paramptr->threshold);
+                    __DEBOUNCE__
+                    return;
+            }
+        }
+
+        __UART_DELAY__
+    }
 }
 
 void

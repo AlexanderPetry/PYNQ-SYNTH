@@ -31,9 +31,14 @@ struct echo_Vstr{
 	float feedback{0.f}; //echo decay
 };
 
+struct distortion_Vstr {
+    float threshold{0.005f};
+};
+
 void gain_effect(float32_t sample, void* params);
 void delay_effect(float32_t sample, void* params);
 void echo_effect(float32_t sample, void* params);
+void distortion_effect(float32_t sample, void* params);
 
 struct SoundEffect{
  char EffName[20]={""};
@@ -57,6 +62,7 @@ public:
 	gain_Vstr internal_gain_Vstr;
 	delay_Vstr internal_delay_Vstr;
 	echo_Vstr internal_echo_Vstr;
+	distortion_Vstr internal_distortion_Vstr;
 
 private:
 	Effects();
@@ -65,7 +71,7 @@ private:
 	SoundEffect effect_list[EFFECT_AMOUNT]{	{"gain effect", gain_effect, (void*)&internal_gain_Vstr},
 											{"delay effect", delay_effect, (void*)&internal_delay_Vstr},
 											{"echo effect1", echo_effect, (void*)&internal_echo_Vstr},
-											{"dummy effect2", nullptr, (void*)&internal_gain_Vstr}};
+											{"distortion effect", distortion_effect, (void*)&internal_distortion_Vstr}};
 };
 
 namespace audio{
