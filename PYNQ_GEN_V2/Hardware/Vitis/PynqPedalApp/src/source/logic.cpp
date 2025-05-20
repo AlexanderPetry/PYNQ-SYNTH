@@ -1,5 +1,11 @@
 #include "logic.h"
 
+Effects::Effects(){
+	internal_delay_Vstr.buf = Sbuffer;
+	//memset(internal_delay_Vstr.buf, 0, sizeof(float)*DELAY_BUF_SIZE);
+}
+
+
 void
 Effects::traverseList(){
 	constexpr u8 total_btns = 4;
@@ -42,7 +48,7 @@ Effects::traverseList(){
 					 	 xil_printf("nothing set for this keybind\r\n");
 					break;
 				case 4://[btn2]
-						usleep(500000);
+						 __DEBOUNCE__
 					 	 xil_printf("selecting effect from list\r\n");
 					 	 effect_list[idx].effFunction(0.f, effect_list[idx].intVstr);
 					 	 displayed_message =0;
@@ -58,7 +64,7 @@ Effects::traverseList(){
 			}
 
 		}
-		usleep(10000);
+		__UART_DELAY__
 	}
 }
 
@@ -67,12 +73,14 @@ SoundEffect::SoundEffect(const char* name_, Eff_CB cb, void* V_struct) : effFunc
     EffName[sizeof(EffName) - 1] = '\0';
 }
 
-float raw_to_float(unsigned long sample) {
+float
+raw_to_float(unsigned long sample) {
     int32_t s = (int32_t)(sample << 8) >> 8;  // sign-extend 24-bit to 32-bit
     return (float)s / 8388608.0f;  // 2^23 = 8388608, max positive value for signed 24-bit
 }
 
-unsigned long float_to_raw(float sample) {
+unsigned long
+float_to_raw(float sample) {
     if (sample > 1.f) sample = 1.f;
     else if (sample < -1.f) sample = -1.f;
 
@@ -83,15 +91,98 @@ unsigned long float_to_raw(float sample) {
 unsigned long
 Effects::perform(unsigned long audioIn){
 	float sample = raw_to_float(audioIn);
-	gain_Vstr* gainVstructPtr = (gain_Vstr*)effect_list[0].intVstr;
-	sample = sample * gainVstructPtr->gain;//sample * 1;//;
-	return float_to_raw(sample);
+
+	//write to update index with newest sample -> case delay = 0;
+	Sbuffer[buf_index] = sample;
+
+	// index of delayed sample in circular way around the current index being written to
+	read_index = (buf_index + DELAY_BUF_SIZE - internal_delay_Vstr.delayidx) % DELAY_BUF_SIZE;
+	float delayed_sample = Sbuffer[read_index];
+
+	//update buffer index for the next sample
+	buf_index = (buf_index + 1) % DELAY_BUF_SIZE;
+
+	mixed = delayed_sample * internal_gain_Vstr.gain;
+
+	return float_to_raw(mixed);
 }
 
-float32_t gain_effect(float32_t sample, void* params) {
+void
+delay_effect(float32_t sample, void* params){
 	constexpr u8 total_btns = 4;
-	Rotary_enc Rot_enc{ Rotary_enc::instance() };
-	Button_Array BTN_ARR{ Button_Array::instance() };
+
+	Rotary_enc& Rot_enc{ Rotary_enc::instance() };
+	Button_Array& BTN_ARR{ Button_Array::instance() };
+
+	u8 btn_mask{0};
+	delay_Vstr* paramptr{ (delay_Vstr*)params };
+	delay_Vstr DVstr_CPY = *paramptr;
+
+	s32 last_counter = Rot_enc.GetCounter();
+	float delay_ms{0};
+	float acc_delay_idx = static_cast<float>(paramptr->delayidx);
+	constexpr float samples_per_tick = 10.0f;
+
+	while(1){
+		Rot_enc.GetSate();
+		s32 current_counter = Rot_enc.GetCounter();
+		s32 delta = current_counter - last_counter;
+		last_counter = current_counter;
+
+		if (delta != 0) {
+			//paramptr->delayidx += static_cast<float>(delta) * 0.5f;
+			acc_delay_idx += delta * samples_per_tick;
+			if (acc_delay_idx < 0.0f) acc_delay_idx = 0.0f;
+			if (acc_delay_idx > static_cast<float>(DELAY_BUF_SIZE - 1)) acc_delay_idx = static_cast<float>(DELAY_BUF_SIZE - 1);
+
+			paramptr->delayidx = static_cast<size_t>(acc_delay_idx);
+			delay_ms = (paramptr->delayidx * 1000.0f) / SAMPLE_RATE;
+			 __CLEAR_SCREEN__ printf("Delay(ms)= %f\r\n", delay_ms);
+		}
+
+		btn_mask = 0;
+
+		for (u8 i = 1; i <= total_btns; ++i) {
+			btn_mask <<= 1;
+			if (BTN_ARR.BTNx_State(i) == Button_Array::RE_STATE::ON_Changed){
+				btn_mask |= 0x1;
+			}
+		}
+
+		if (btn_mask & 0xF) {
+			switch(btn_mask){
+				case 1://[btn4
+					break;
+
+				case 2://[btn3]
+					__CLEAR_SCREEN__ xil_printf("user discarted changes\r\n");
+					*paramptr = DVstr_CPY;
+					__DEBOUNCE__
+					return; //idk will see if return value should be applied or static global or something
+
+				case 4://[btn2]
+
+					__CLEAR_SCREEN__ printf("Delay(ms) confirmed = %f\r\n", delay_ms);
+					__DEBOUNCE__
+					return;
+
+				case 8://[btn1]
+					break;
+
+				default:
+					break;
+			}
+		}
+
+	__UART_DELAY__
+	}
+}
+
+void
+gain_effect(float32_t sample, void* params) {
+	constexpr u8 total_btns = 4;
+	Rotary_enc& Rot_enc{ Rotary_enc::instance() };
+	Button_Array& BTN_ARR{ Button_Array::instance() };
 
 	u8 btn_mask{0};
 
@@ -134,13 +225,13 @@ float32_t gain_effect(float32_t sample, void* params) {
 				case 2://[btn3]
 						__CLEAR_SCREEN__ xil_printf("user discarted changes\r\n");
 						*paramptr = GVstr_CPY;
-						usleep(500000);
-						return 0.f; //idk will see if return value should be applied or static global or something
+						__DEBOUNCE__
+						return; //idk will see if return value should be applied or static global or something
 					break;
 				case 4://[btn2]
 						__CLEAR_SCREEN__ printf("gain confirmed = %f\r\n", paramptr->gain);
-						usleep(500000);
-						return 0.f;
+						__DEBOUNCE__
+						return;
 					break;
 				case 8://[btn1]
 					break;
@@ -148,7 +239,72 @@ float32_t gain_effect(float32_t sample, void* params) {
 					break;
 			}
 		}
-	usleep(10000);
+	__UART_DELAY__
 	}
 	//return sample * paramptr->gain;
+}
+
+namespace audio{
+
+	unsigned long Audio_Driver::u32DataL = 0;
+	unsigned long Audio_Driver::u32DataR = 0;
+
+	Audio_Driver::Audio_Driver(){
+		int Status;
+		IicConfig(XPAR_XIICPS_0_DEVICE_ID);
+		AudioPllConfig();
+		AudioConfigureJacks();
+		LineinLineoutConfig();
+
+		 XScuTimer_Config *Scu_ConfigPtr;
+
+		 Scu_ConfigPtr = XScuTimer_LookupConfig(XPAR_PS7_SCUTIMER_0_DEVICE_ID);
+		 Status = XScuTimer_CfgInitialize(&Scu_Timer, Scu_ConfigPtr, Scu_ConfigPtr->BaseAddr);
+		 Status = Timer_Intr_Setup(&IntcInstance, &Scu_Timer, XPS_SCU_TMR_INT_ID);
+		 XScuTimer_LoadTimer(&Scu_Timer,(XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)/(SAMPLE_RATE));
+		 XScuTimer_EnableAutoReload(&Scu_Timer);
+		 XScuTimer_Start(&Scu_Timer);
+
+		 (void)Status;
+	}
+
+	int
+	Audio_Driver::Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId)
+	{
+		int Status;
+		XScuGic_Config *IntcConfig;
+		IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+		Status = XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig, IntcConfig->CpuBaseAddress);
+		// Step 1: Interrupt Setup
+		Xil_ExceptionInit();
+		// Step 2: Interrupt Setup
+		Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler,IntcInstancePtr);
+		// Step 3: Interrupt Setup
+		Status = XScuGic_Connect(IntcInstancePtr, TimerIntrId, (Xil_ExceptionHandler)Timer_ISR, (void *)TimerInstancePtr);
+		// Step 4: Interrupt Setup
+		XScuGic_Enable(IntcInstancePtr, TimerIntrId);
+		// Step 5:
+		XScuTimer_EnableInterrupt(TimerInstancePtr);
+		// Step 6: Interrupt Setup
+		Xil_ExceptionEnable();
+
+		(void)Status;
+
+		return XST_SUCCESS;
+	}
+
+	void
+	Audio_Driver::Timer_ISR(void * CallBackRef)
+	{
+		XScuTimer *TimerInstancePtr = (XScuTimer *) CallBackRef;
+		XScuTimer_ClearInterruptStatus(TimerInstancePtr);
+
+		u32DataL = Xil_In32(I2S_DATA_RX_L_REG);
+
+		Effects& eff_instance{ Effects::instance() };
+		u32DataL = eff_instance.perform(u32DataL);
+
+		Xil_Out32(I2S_DATA_TX_R_REG, 0);
+		Xil_Out32(I2S_DATA_TX_L_REG, u32DataL);
+	}
 }
