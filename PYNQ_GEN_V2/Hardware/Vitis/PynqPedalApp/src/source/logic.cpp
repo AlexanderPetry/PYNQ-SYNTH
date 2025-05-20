@@ -91,26 +91,99 @@ float_to_raw(float sample) {
 unsigned long
 Effects::perform(unsigned long audioIn){
 	float sample = raw_to_float(audioIn);
+	float delayed_sample = 0.0f;
 
-	// Read delayed sample
 	read_index = (buf_index + DELAY_BUF_SIZE - internal_delay_Vstr.delayidx) % DELAY_BUF_SIZE;
-	float delayed_sample = Sbuffer[read_index];
 
-	// Echo = input + delayed * feedback
-	constexpr float feedback = 0.5f; // echo decay
-	//float echo_sample = sample + delayed_sample * feedback;
-	float echo_sample =delayed_sample;
-	// Store echo back into buffer
-	//Sbuffer[buf_index] = echo_sample;
-	Sbuffer[buf_index] = sample;
-	// Advance buffer index
+	if (internal_delay_Vstr.delayidx > 0) {
+	    read_index = (buf_index + DELAY_BUF_SIZE - internal_delay_Vstr.delayidx) % DELAY_BUF_SIZE;
+	    delayed_sample = Sbuffer[read_index];
+	}else{
+		delayed_sample = sample;
+	}
+
+	float echo_sample = delayed_sample;
+	if (internal_echo_Vstr.feedback > 0.0f) {
+	    echo_sample = sample + delayed_sample * internal_echo_Vstr.feedback;
+	    Sbuffer[buf_index] = echo_sample;
+	} else {
+	    Sbuffer[buf_index] = sample;
+	}
+
 	buf_index = (buf_index + 1) % DELAY_BUF_SIZE;
 
-	// Output (scaled)
-	//mixed = echo_sample * internal_gain_Vstr.gain;
 	mixed = echo_sample * internal_gain_Vstr.gain;
 
 	return float_to_raw(mixed);
+}
+
+void
+echo_effect(float32_t sample, void* params){
+	constexpr u8 total_btns = 4;
+
+	Rotary_enc& Rot_enc{ Rotary_enc::instance() };
+	Button_Array& BTN_ARR{ Button_Array::instance() };
+
+	u8 btn_mask{0};
+	echo_Vstr* paramptr{ (echo_Vstr*)params };
+	echo_Vstr EVstr_CPY = *paramptr;
+
+	s32 last_counter = Rot_enc.GetCounter();
+	float acc_feedback{0};
+
+	while(1){
+		Rot_enc.GetSate();
+		s32 current_counter = Rot_enc.GetCounter();
+		s32 delta = current_counter - last_counter;
+		last_counter = current_counter;
+
+
+
+		if (delta != 0) {
+		    acc_feedback += 0.05f * delta;
+		    if (acc_feedback < 0.0f) acc_feedback = 0.0f;
+		    if (acc_feedback > 1.0f) acc_feedback = 1.0f;
+
+		    paramptr->feedback = acc_feedback;
+		    __CLEAR_SCREEN__ printf("Feedback = %f\r\n",acc_feedback);
+		}
+
+		btn_mask = 0;
+
+		for (u8 i = 1; i <= total_btns; ++i) {
+			btn_mask <<= 1;
+			if (BTN_ARR.BTNx_State(i) == Button_Array::RE_STATE::ON_Changed){
+				btn_mask |= 0x1;
+			}
+		}
+
+		if (btn_mask & 0xF) {
+			switch(btn_mask){
+				case 1://[btn4
+					break;
+
+				case 2://[btn3]
+					__CLEAR_SCREEN__ xil_printf("user discarted changes\r\n");
+					*paramptr = EVstr_CPY;
+					__DEBOUNCE__
+					return; //idk will see if return value should be applied or static global or something
+
+				case 4://[btn2]
+
+					__CLEAR_SCREEN__ printf("Feedback confirmed = %f\r\n", paramptr->feedback);
+					__DEBOUNCE__
+					return;
+
+				case 8://[btn1]
+					break;
+
+				default:
+					break;
+			}
+		}
+
+	__UART_DELAY__
+	}
 }
 
 void
@@ -127,7 +200,7 @@ delay_effect(float32_t sample, void* params){
 	s32 last_counter = Rot_enc.GetCounter();
 	float delay_ms{0};
 	float acc_delay_idx = static_cast<float>(paramptr->delayidx);
-	constexpr float samples_per_tick = 1000.0f;
+	constexpr float samples_per_tick = 100.0f;
 
 	while(1){
 		Rot_enc.GetSate();

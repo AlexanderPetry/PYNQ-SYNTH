@@ -27,9 +27,13 @@ struct delay_Vstr{
 	size_t delayidx{0};
 	float* buf;
 };
+struct echo_Vstr{
+	float feedback{0.f}; //echo decay
+};
 
 void gain_effect(float32_t sample, void* params);
 void delay_effect(float32_t sample, void* params);
+void echo_effect(float32_t sample, void* params);
 
 struct SoundEffect{
  char EffName[20]={""};
@@ -52,6 +56,7 @@ public:
 	float prev_sample;
 	gain_Vstr internal_gain_Vstr;
 	delay_Vstr internal_delay_Vstr;
+	echo_Vstr internal_echo_Vstr;
 
 private:
 	Effects();
@@ -59,7 +64,7 @@ private:
 
 	SoundEffect effect_list[EFFECT_AMOUNT]{	{"gain effect", gain_effect, (void*)&internal_gain_Vstr},
 											{"delay effect", delay_effect, (void*)&internal_delay_Vstr},
-											{"dummy effect1", nullptr, (void*)&internal_gain_Vstr},
+											{"echo effect1", echo_effect, (void*)&internal_echo_Vstr},
 											{"dummy effect2", nullptr, (void*)&internal_gain_Vstr}};
 };
 
