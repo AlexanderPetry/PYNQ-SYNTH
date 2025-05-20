@@ -24,7 +24,7 @@ struct gain_Vstr{
 };
 
 struct delay_Vstr{
-	size_t delayidx;
+	size_t delayidx{0};
 	float* buf;
 };
 

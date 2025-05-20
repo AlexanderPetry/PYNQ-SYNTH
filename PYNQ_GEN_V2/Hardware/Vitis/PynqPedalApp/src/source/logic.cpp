@@ -92,17 +92,23 @@ unsigned long
 Effects::perform(unsigned long audioIn){
 	float sample = raw_to_float(audioIn);
 
-	//write to update index with newest sample -> case delay = 0;
-	Sbuffer[buf_index] = sample;
-
-	// index of delayed sample in circular way around the current index being written to
+	// Read delayed sample
 	read_index = (buf_index + DELAY_BUF_SIZE - internal_delay_Vstr.delayidx) % DELAY_BUF_SIZE;
 	float delayed_sample = Sbuffer[read_index];
 
-	//update buffer index for the next sample
+	// Echo = input + delayed * feedback
+	constexpr float feedback = 0.5f; // echo decay
+	//float echo_sample = sample + delayed_sample * feedback;
+	float echo_sample =delayed_sample;
+	// Store echo back into buffer
+	//Sbuffer[buf_index] = echo_sample;
+	Sbuffer[buf_index] = sample;
+	// Advance buffer index
 	buf_index = (buf_index + 1) % DELAY_BUF_SIZE;
 
-	mixed = delayed_sample * internal_gain_Vstr.gain;
+	// Output (scaled)
+	//mixed = echo_sample * internal_gain_Vstr.gain;
+	mixed = echo_sample * internal_gain_Vstr.gain;
 
 	return float_to_raw(mixed);
 }
@@ -121,7 +127,7 @@ delay_effect(float32_t sample, void* params){
 	s32 last_counter = Rot_enc.GetCounter();
 	float delay_ms{0};
 	float acc_delay_idx = static_cast<float>(paramptr->delayidx);
-	constexpr float samples_per_tick = 10.0f;
+	constexpr float samples_per_tick = 1000.0f;
 
 	while(1){
 		Rot_enc.GetSate();
