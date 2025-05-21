@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "directory": "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo",
+    "arguments": [
+      "C:\\Xilinx\\Vitis_HLS\\2024.1\\vcxx\\libexec\\clang++.exe",
+      "-fhls",
+      "-hls-syn-headers-dir=C:\\Xilinx\\Vitis_HLS\\2024.1\\common\\technology\\autopilot",
+      "",
+      "-c",
+      "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\echo.cpp"
+    ],
+    "file": "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\echo.cpp"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "0": {
+    "basicblocks": 1,
+    "calls": "",
+    "file": "echo.cpp",
+    "fileloc": 1,
+    "instructions": 80,
+    "loads": {
+      "L": 4,
+      "T": 2
+    },
+    "name": "echo_effect",
+    "stores": {
+      "L": 4,
+      "T": 3
+    },
+    "total_instructions": 80
+  }
+}

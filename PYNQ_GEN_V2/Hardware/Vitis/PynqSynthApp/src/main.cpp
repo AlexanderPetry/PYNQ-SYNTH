@@ -40,7 +40,7 @@
 #define UINT_SCALED_MAX_VALUE 0x7FFFFF
 #define INTC_DEVICE_ID		XPAR_SCUGIC_SINGLE_DEVICE_ID
 
-#define BASE_FREQUENCY 		1.0f
+#define BASE_FREQUENCY 		100.0f
 
 XScuTimer Timer;
 XScuGic Intc;
@@ -57,8 +57,6 @@ int main()
 {
 
     init_platform();
-    Xil_SetTlbAttributes(0x40000000, 0x14de2);
-
 
 	XUartPs Uart_Ps;
 	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
@@ -187,6 +185,10 @@ int main()
     return 0;
 }
 
+float softclip(float x, float drive = 2.0f) {
+    return tanhf(drive * x);
+}
+
 static void Timer_ISR(void *CallBackRef)
 {
 
@@ -200,7 +202,7 @@ static void Timer_ISR(void *CallBackRef)
 		voice& v = *ptr;
 	    if (v.isActive()){
 	    	v.updateEnvelope(deltaTime);
-	        sample += v.nextSample(globalPhase, BASE_FREQUENCY);
+	        sample += lowpass(v.nextSample(globalPhase, BASE_FREQUENCY));
 	    }
 	}
 
@@ -212,13 +214,17 @@ static void Timer_ISR(void *CallBackRef)
 	//int voiceCount = voices.size();
 	//if (voiceCount > 0) sample /= voiceCount;
 
+	sample = softclip(sample);
+	sample = twoPoleLowpass(sample);
+	sample = softCompressor(sample);
+
 	//currentEffect = TREMOLO;
 
 	switch (currentEffect)
 	{
 	    case NONE:break;
 	    case ECHO: sample = echo(sample); break;
-	    case TREMOLO: sample =tremolo(sample, SAMPLE_RATE); break;
+	    case TREMOLO: sample = tremolo(sample, SAMPLE_RATE); break;
 	    case DISTORTION: sample = distortion(sample); break;
 	    case LOWPASS: sample = lowpass(sample); break;
 	    case BITCRUSH: sample = bitcrush(sample); break;

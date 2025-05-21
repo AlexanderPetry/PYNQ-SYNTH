@@ -1,8 +1,0 @@
-#include "platform.h"
-#include "xil_printf.h"
-
-int main()
-{
-
-    return 0;
-}

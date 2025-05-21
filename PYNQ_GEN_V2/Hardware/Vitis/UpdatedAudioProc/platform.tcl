@@ -52,3 +52,12 @@ domain active {zynq_fsbl}
 bsp reload
 platform generate -domains standalone_ps7_cortexa9_0,zynq_fsbl 
 platform generate -domains standalone_ps7_cortexa9_0,zynq_fsbl 
+platform active {UpdatedAudioProc}
+platform config -updatehw {C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vivado/UpdatedAudioProcV3.xsa}
+platform generate -domains 
+platform clean
+platform generate
+platform config -updatehw {C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vivado/Test.xsa}
+platform generate -domains 
+platform clean
+platform generate

@@ -1,0 +1,53 @@
+#include "signal.hpp"
+#include <cmath>
+#include "arm_math.h"
+#include "xil_printf.h"
+
+#include <cstdlib>
+
+#ifndef M_PI
+static constexpr float M_PI = 3.14159265358979323846f;
+#endif
+
+signal::signal(Type type, float frequency, float amplitude)
+    : type(type), frequency(frequency), amplitude(amplitude)
+{
+	float jitter = ((rand() % 2001) - 1000) / 100000.0f; // range [-0.01, +0.01]
+	this->frequency = frequency * (1.0f + jitter);
+
+	xil_printf("freq: %i at Ampl: %i\r\n", (int)this->frequency, (int)(amplitude));
+}
+
+void signal::setFrequency(float freq) {
+    frequency = freq;
+}
+
+void signal::reset() {
+    //phase = 0.0f;
+}
+
+float signal::nextSample(float globalFrequency, float baseFrequency) {
+    float sample = 0.0f;
+    //float phase = globalFrequency * (frequency / baseFrequency);
+
+
+    switch (type) {
+        case SINE:
+        	sample = std::sin(phase);
+            break;
+        case SQUARE:
+        	sample = (std::sin(phase) >= 0.0f) ? 1.0f : -1.0f;
+            break;
+        case SAW:
+            sample = (1.0f / M_PI) * std::fmod(phase + M_PI, 2.0f * M_PI) - 1.0f;
+            break;
+        case TRIANGLE:
+            sample = (2.0f / M_PI) * std::asin(std::sin(phase));
+            break;
+    }
+
+    phase += 2.0f * M_PI * frequency / 48000;
+    if (phase >= 2.0f * M_PI) phase -= 2.0f * M_PI;
+
+    return sample * amplitude;
+}

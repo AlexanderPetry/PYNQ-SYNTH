@@ -1,0 +1,1 @@
+lappend RenamedRtlIO buffer_r buffer_r_r

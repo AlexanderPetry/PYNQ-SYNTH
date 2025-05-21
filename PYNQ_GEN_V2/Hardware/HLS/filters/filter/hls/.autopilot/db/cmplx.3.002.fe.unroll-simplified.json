@@ -1,0 +1,18 @@
+{
+  "0": {
+    "basicblocks": 5,
+    "calls": "",
+    "file": "filter.cpp",
+    "fileloc": 19,
+    "instructions": 41,
+    "loads": {
+      "G": 4
+    },
+    "name": "filter",
+    "stores": {
+      "G": 3,
+      "T": 1
+    },
+    "total_instructions": 41
+  }
+}

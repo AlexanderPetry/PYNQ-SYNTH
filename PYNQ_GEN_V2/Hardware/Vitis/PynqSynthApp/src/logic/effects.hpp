@@ -1,20 +1,35 @@
+#include <algorithm>
+#include <math.h>
+
 enum EffectType { NONE, ECHO, TREMOLO, DISTORTION, LOWPASS, BITCRUSH, REVERB};
 EffectType currentEffect = NONE;
 
 
 //*********** ECHO effect **************//
 
-static float echoBuffer[44100] = {0};
-static int echoIndex = 0;
-float echo(float sample)
-{
+#define BUFFER_SIZE 44100
 
-    sample += 0.4f * echoBuffer[echoIndex];
-    echoBuffer[echoIndex] = sample;
-    echoIndex = (echoIndex + 1) % 44100;
-    return sample;
+float echo(float sample) {
+    static float buffer[BUFFER_SIZE] = {0};
+    static int index = 0;
+
+    float delay_ms = 500.0f;
+    float gain = 0.4f;
+    int sample_rate = 44100;
+
+    int delay_samples = (int)(delay_ms * 0.001f * sample_rate);
+    if (delay_samples >= BUFFER_SIZE) delay_samples = BUFFER_SIZE - 1;
+
+    int read_index = (index + BUFFER_SIZE - delay_samples) % BUFFER_SIZE;
+    float delayed = buffer[read_index];
+
+    float out = sample + gain * delayed;
+
+    buffer[index] = out;
+    index = (index + 1) % BUFFER_SIZE;
+
+    return out;
 }
-
 
 //*********** TREMOLO effect **************//
 
@@ -37,7 +52,7 @@ float distortion(float sample, float gain = 2.0f) {
 
 //*********** LOWPASS effect **************//
 
-float lowpass(float sample, float alpha = 0.1f) {
+float lowpass(float sample, float alpha = 0.05f) {
     static float prev = 0.0f;
     float filtered = alpha * sample + (1.0f - alpha) * prev;
     prev = filtered;
@@ -84,4 +99,25 @@ float reverb(float sample) {
 
     reverbIndex = (reverbIndex + 1) % 44100;
     return out;
+}
+
+float twoPoleLowpass(float input) {
+    static float p1 = 0.0f;
+    static float p2 = 0.0f;
+    float alpha = 0.2f;
+
+    p1 = alpha * input + (1.0f - alpha) * p1;
+    p2 = alpha * p1 + (1.0f - alpha) * p2;
+
+    return p2;
+}
+
+float softCompressor(float sample) {
+    static float gain = 1.0f;
+    float env = fabsf(sample);
+    float targetGain = (env > 0.8f) ? 0.8f / env : 1.0f;
+    float smoothing = 0.01f;
+
+    gain += smoothing * (targetGain - gain);
+    return sample * gain;
 }

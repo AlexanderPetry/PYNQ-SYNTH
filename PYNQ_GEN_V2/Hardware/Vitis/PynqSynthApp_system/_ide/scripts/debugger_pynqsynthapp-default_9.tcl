@@ -14,9 +14,9 @@ targets -set -nocase -filter {name =~"APU*"}
 rst -system
 after 3000
 targets -set -filter {jtag_cable_name =~ "Xilinx HW-FTDI-TEST FT2232H 1234-tulA" && level==0 && jtag_device_ctx=="jsn-HW-FTDI-TEST FT2232H-1234-tulA-23727093-0"}
-fpga -file C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/PynqSynthApp/_ide/bitstream/UpdatedAudioProcV2.bit
+fpga -file C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/PynqSynthApp/_ide/bitstream/UpdatedAudioProcV3.bit
 targets -set -nocase -filter {name =~"APU*"}
-loadhw -hw C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/UpdatedAudioProc/export/UpdatedAudioProc/hw/UpdatedAudioProcV2.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
+loadhw -hw C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/UpdatedAudioProc/export/UpdatedAudioProc/hw/UpdatedAudioProcV3.xsa -mem-ranges [list {0x40000000 0xbfffffff}] -regs
 configparams force-mem-access 1
 targets -set -nocase -filter {name =~"APU*"}
 source C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/PynqSynthApp/_ide/psinit/ps7_init.tcl

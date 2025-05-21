@@ -1,0 +1,3 @@
+relativeroot=C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/HLS/echo
+original_argv=--mode hls --package --config C:\Users\PatrickKenis\Documents\PYNQ-SYNTH\PYNQ_GEN_V2\Hardware\HLS\echo\hls_config.cfg --work_dir echo_effect 
+

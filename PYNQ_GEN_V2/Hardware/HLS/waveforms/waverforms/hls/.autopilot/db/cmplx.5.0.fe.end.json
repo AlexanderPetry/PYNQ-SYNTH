@@ -1,0 +1,97 @@
+{
+    "1": {
+        "name": "sin_or_cos<float>_Pipeline_1",
+        "file": "C:\\scratch\\2024.1\\hls_product\\545\\2024.1\\src\\shared\\hls\\clib\/hlsmath\/include\/FloatingPoint\\hls_hotbm.h",
+        "fileloc": "252",
+        "instructions": "31",
+        "total_instructions": "31",
+        "calls": "",
+        "basicblocks": "4",
+        "loads": {
+            "L": "5"
+        },
+        "stores": {
+            "L": "4"
+        },
+        "loops": {
+            "L": "1"
+        }
+    },
+    "2": {
+        "name": "generic_asin<float>_Pipeline_1",
+        "file": "C:\\scratch\\2024.1\\hls_product\\545\\2024.1\\src\\shared\\hls\\clib\/hlsmath\/include\/FloatingPoint\\hls_asin_acos.h",
+        "fileloc": "99",
+        "instructions": "73",
+        "total_instructions": "73",
+        "calls": "",
+        "basicblocks": "4",
+        "loads": {
+            "G": "1",
+            "L": "6"
+        },
+        "stores": {
+            "L": "10"
+        },
+        "loops": {
+            "L": "1"
+        }
+    },
+    "3": {
+        "name": "sin_or_cos<float>_Pipeline_2",
+        "file": "C:\\scratch\\2024.1\\hls_product\\545\\2024.1\\src\\shared\\hls\\clib\/hlsmath\/include\/FloatingPoint\\hls_hotbm.h",
+        "fileloc": "252",
+        "instructions": "33",
+        "total_instructions": "33",
+        "calls": "",
+        "basicblocks": "3",
+        "loads": {
+            "L": "2"
+        },
+        "stores": {
+            "L": "4"
+        },
+        "loops": {
+            "L": "1"
+        }
+    },
+    "0": {
+        "name": "waverforms",
+        "file": "waveforms.cpp",
+        "fileloc": "13",
+        "instructions": "92",
+        "total_instructions": "877",
+        "calls": "5 5 5 4",
+        "basicblocks": "10",
+        "loads": {
+            "G": "1"
+        },
+        "stores": {
+            "G": "1"
+        }
+    },
+    "4": {
+        "name": "generic_asin<float>",
+        "file": "hls_asin_acos.h",
+        "fileloc": "55",
+        "instructions": "121",
+        "total_instructions": "194",
+        "calls": "2",
+        "basicblocks": "9",
+        "loads": {
+            "L": "1"
+        }
+    },
+    "5": {
+        "name": "sin_or_cos<float>",
+        "file": "hls_hotbm.h",
+        "fileloc": "209",
+        "instructions": "133",
+        "total_instructions": "197",
+        "calls": "1 3",
+        "basicblocks": "1",
+        "loads": {
+            "G": "4",
+            "L": "4"
+        }
+    }
+}

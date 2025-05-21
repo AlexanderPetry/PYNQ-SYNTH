@@ -1,0 +1,386 @@
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                   Line: 322, Column: 0 }
+Function:        _ZNK9fp_structIfE8to_floatEv.32.42.51.62
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::data() const (.35.45.54.65)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 309, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'fp_struct<float>::to_float() const (.32.42.51.62)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 322, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                   Line: 346, Column: 0 }
+Function:        _ZNK9fp_structIfE7to_ieeeEv
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::to_float() const (.32.42.51.62)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 322, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'fp_struct<float>::to_ieee() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 346, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_copysign.h', 
+                   Line: 10, Column: 0 }
+Function:        _Z16generic_copysignIfET_S0_S0_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::fp_struct(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 283, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'float generic_copysign<float>(float, float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_copysign.h', 
+                       Line: 10, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_copysign.h', 
+                   Line: 10, Column: 0 }
+Function:        _Z16generic_copysignIfET_S0_S0_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::to_ieee() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 346, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'float generic_copysign<float>(float, float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_copysign.h', 
+                       Line: 10, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_fabs.h', 
+                   Line: 12, Column: 0 }
+Function:        _Z12generic_fabsIfET_S0_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'float generic_copysign<float>(float, float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_copysign.h', 
+                       Line: 10, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'float generic_fabs<float>(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_fabs.h', 
+                       Line: 12, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_nan.h', 
+                   Line: 10, Column: 0 }
+Function:        _Z11generic_nanIfET_PKc
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::to_ieee() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 346, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'float generic_nan<float>(char const*)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_nan.h', 
+                       Line: 10, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_isnan.h', 
+                   Line: 16, Column: 0 }
+Function:        _Z13generic_isnanIdEiT_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<double>::fp_struct(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 456, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'int generic_isnan<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_isnan.h', 
+                       Line: 16, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_isinf.h', 
+                   Line: 16, Column: 0 }
+Function:        _Z13generic_isinfIdEiT_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<double>::fp_struct(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 456, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'int generic_isinf<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_isinf.h', 
+                       Line: 16, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                   Line: 494, Column: 0 }
+Function:        _ZNK9fp_structIdE9to_doubleEv.93.103.113.131
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<double>::data() const (.96.106.116.134)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 475, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'fp_struct<double>::to_double() const (.93.103.113.131)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 494, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                   Line: 509, Column: 0 }
+Function:        _ZNK9fp_structIdE7to_ieeeEv
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<double>::to_double() const (.93.103.113.131)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 494, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'fp_struct<double>::to_ieee() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 509, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                   Line: 157, Column: 0 }
+Function:        _ZN11exp_reduce_11exp_genericIdEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<double>::fp_struct(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 456, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'double exp_reduce_::exp_generic<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                       Line: 157, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                   Line: 157, Column: 0 }
+Function:        _ZN11exp_reduce_11exp_genericIdEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'int generic_isnan<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_isnan.h', 
+                       Line: 16, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'double exp_reduce_::exp_generic<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                       Line: 157, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                   Line: 157, Column: 0 }
+Function:        _ZN11exp_reduce_11exp_genericIdEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'int generic_isinf<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_isinf.h', 
+                       Line: 16, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'double exp_reduce_::exp_generic<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                       Line: 157, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                   Line: 157, Column: 0 }
+Function:        _ZN11exp_reduce_11exp_genericIdEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<double>::to_ieee() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 509, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'double exp_reduce_::exp_generic<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                       Line: 157, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                   Line: 157, Column: 0 }
+Function:        _ZN11exp_reduce_11exp_genericIdEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<double>::expv() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 485, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'double exp_reduce_::exp_generic<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                       Line: 157, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                   Line: 157, Column: 0 }
+Function:        _ZN11exp_reduce_11exp_genericIdEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'exp_reduce_::exp_traits<double>::exp_Z1P_m_1(ap_ufixed<51, -8, (ap_q_mode)5, (ap_o_mode)3, 0>)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                       Line: 90, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'double exp_reduce_::exp_generic<double>(double)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_exp_.h', 
+                       Line: 157, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib\hlsmath\src\common\hls_exp_float.cpp', 
+                   Line: 7, Column: 0 }
+Function:        _ZN11exp_reduce_5expm1Ef
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::fp_struct(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 283, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'exp_reduce_::expm1(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib\hlsmath\src\common\hls_exp_float.cpp', 
+                       Line: 7, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_tanh.h', 
+                   Line: 28, Column: 0 }
+Function:        _ZN12explog_based12generic_tanhIfEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::fp_struct(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 283, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'float explog_based::generic_tanh<float>(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_tanh.h', 
+                       Line: 28, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_tanh.h', 
+                   Line: 28, Column: 0 }
+Function:        _ZN12explog_based12generic_tanhIfEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'float generic_fabs<float>(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint/hls_fabs.h', 
+                       Line: 12, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'float explog_based::generic_tanh<float>(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_tanh.h', 
+                       Line: 28, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_tanh.h', 
+                   Line: 28, Column: 0 }
+Function:        _ZN12explog_based12generic_tanhIfEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'float generic_nan<float>(char const*)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_nan.h', 
+                       Line: 10, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'float explog_based::generic_tanh<float>(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_tanh.h', 
+                       Line: 28, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_tanh.h', 
+                   Line: 28, Column: 0 }
+Function:        _ZN12explog_based12generic_tanhIfEET_S1_
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'exp_reduce_::expm1(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib\hlsmath\src\common\hls_exp_float.cpp', 
+                       Line: 7, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'float explog_based::generic_tanh<float>(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_tanh.h', 
+                       Line: 28, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: mixer.cpp, Line: 5, Column: 0 }
+Function:        _Z8softclipff
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          tanhf
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib\hlsmath\src\c\tanhfloat.cpp', 
+                       Line: 7, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'softclip(float, float)'
+    DebugLoc:        { File: mixer.cpp, Line: 5, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: mixer.cpp, Line: 10, Column: 0 }
+Function:        mixer
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'softclip(float, float)'
+    DebugLoc:        { File: mixer.cpp, Line: 5, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          mixer
+    DebugLoc:        { File: mixer.cpp, Line: 10, Column: 0 }
+  - String:          ''''
+...

@@ -1,0 +1,45 @@
+{
+  "0": {
+    "basicblocks": 1,
+    "calls": "2",
+    "file": "mixer.cpp",
+    "fileloc": 8,
+    "instructions": 14,
+    "name": "mixer",
+    "stores": {
+      "T": 1
+    },
+    "total_instructions": 493
+  },
+  "1": {
+    "basicblocks": 21,
+    "calls": "",
+    "file": "hls_exp_.h",
+    "fileloc": 156,
+    "instructions": 354,
+    "loads": {
+      "G": 4,
+      "L": 29
+    },
+    "name": "exp_generic<double>",
+    "stores": {
+      "L": 27
+    },
+    "total_instructions": 354
+  },
+  "2": {
+    "basicblocks": 14,
+    "calls": "1",
+    "file": "hls_tanh.h",
+    "fileloc": 28,
+    "instructions": 125,
+    "loads": {
+      "L": 10
+    },
+    "name": "generic_tanh<float>",
+    "stores": {
+      "L": 12
+    },
+    "total_instructions": 479
+  }
+}

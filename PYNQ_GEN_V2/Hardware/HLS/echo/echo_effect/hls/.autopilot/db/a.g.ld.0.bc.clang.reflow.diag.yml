@@ -1,0 +1,167 @@
+--- !Failure
+Pass:            generate-ir-wrapper
+Name:            MAXIDepthUnspecified
+DebugLoc:        { File: echo.cpp, Line: 2, Column: 0 }
+Function:        _Z11echo_effectfPfffiPVfPi
+Args:            
+  - String:          'A depth specification is required for MAXI interface port '''
+  - Name:            buffer
+  - String:          ''' for cosimulation.'
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                   Line: 12, Column: 0 }
+Function:        _Z20generic_cast_IEEE754IiL9ap_q_mode6EfET_T1_bN3hls9enable_ifIXsr3std14numeric_limitsIS1_EE9is_signedEbE4typeE
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::fp_struct(float)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 283, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'int generic_cast_IEEE754<int, (ap_q_mode)6, float>(float, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                       Line: 12, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                   Line: 12, Column: 0 }
+Function:        _Z20generic_cast_IEEE754IiL9ap_q_mode6EfET_T1_bN3hls9enable_ifIXsr3std14numeric_limitsIS1_EE9is_signedEbE4typeE
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::mantissa() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 340, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'int generic_cast_IEEE754<int, (ap_q_mode)6, float>(float, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                       Line: 12, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                   Line: 12, Column: 0 }
+Function:        _Z20generic_cast_IEEE754IiL9ap_q_mode6EfET_T1_bN3hls9enable_ifIXsr3std14numeric_limitsIS1_EE9is_signedEbE4typeE
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::expv() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 316, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'int generic_cast_IEEE754<int, (ap_q_mode)6, float>(float, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                       Line: 12, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                   Line: 12, Column: 0 }
+Function:        _Z20generic_cast_IEEE754IiL9ap_q_mode6EfET_T1_bN3hls9enable_ifIXsr3std14numeric_limitsIS1_EE9is_signedEbE4typeE
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'fp_struct<float>::__signbit() const'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/src/hls\utils/x_hls_utils.h', 
+                       Line: 349, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'int generic_cast_IEEE754<int, (ap_q_mode)6, float>(float, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                       Line: 12, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                   Line: 116, Column: 0 }
+Function:        _Z20generic_cast_IEEE754IifET_T0_b
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'int generic_cast_IEEE754<int, (ap_q_mode)6, float>(float, bool, hls::enable_if<std::numeric_limits<int>::is_signed, bool>::type)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                       Line: 12, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'int generic_cast_IEEE754<int, float>(float, bool)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                       Line: 116, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib\hlsmath\src\lib_floatconversion.cpp', 
+                   Line: 51, Column: 0 }
+Function:        __hls_fptosi_float_i32
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          'int generic_cast_IEEE754<int, float>(float, bool)'
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib/hlsmath/include/FloatingPoint\hls_case_IEEE754.h', 
+                       Line: 116, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          __hls_fptosi_float_i32
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib\hlsmath\src\lib_floatconversion.cpp', 
+                       Line: 51, Column: 0 }
+  - String:          ''''
+...
+--- !Passed
+Pass:            reflow-inliner
+Name:            Inline
+DebugLoc:        { File: echo.cpp, Line: 2, Column: 0 }
+Function:        _Z11echo_effectfPfffiPVfPi
+Args:            
+  - String:          'Inlining function '''
+  - Callee:          __hls_fptosi_float_i32
+    DebugLoc:        { File: 'C:\scratch\2024.1\hls_product\545\2024.1\src\shared\hls\clib\hlsmath\src\lib_floatconversion.cpp', 
+                       Line: 51, Column: 0 }
+  - String:          ''' into '''
+  - Caller:          'echo_effect(float, float*, float, float, int, float volatile*, int*)'
+    DebugLoc:        { File: echo.cpp, Line: 2, Column: 0 }
+  - String:          ''''
+...
+--- !Missed
+Pass:            reflow-burst-inference
+Name:            NonSimpleMemoryAccess
+DebugLoc:        { File: echo.cpp, Line: 17, Column: 21 }
+Function:        _Z11echo_effectfPfffiPVfPi
+Args:            
+  - String:          Volatile or Atomic access cannot be transformed
+  - String:          ' _XLX_SEP_ '
+  - OrigAccess:      delayed
+    DebugLoc:        { File: echo.cpp, Line: 17, Column: 21 }
+  - OrigDirection:   read
+  - OrigID:          entry.load.71
+  - ArrayName:       buffer
+  - String:          ' '
+  - BundleName:      BUFFER
+  - String:          ' '
+  - Function:        'echo_effect(float, float*, float, float, int, float volatile*, int*)'
+    DebugLoc:        { File: echo.cpp, Line: 2, Column: 0 }
+  - String:          ' '
+...
+--- !Missed
+Pass:            reflow-burst-inference
+Name:            NonSimpleMemoryAccess
+DebugLoc:        { File: echo.cpp, Line: 21, Column: 25 }
+Function:        _Z11echo_effectfPfffiPVfPi
+Args:            
+  - String:          Volatile or Atomic access cannot be transformed
+  - String:          ' _XLX_SEP_ '
+  - OrigAccess:      store
+    DebugLoc:        { File: echo.cpp, Line: 21, Column: 25 }
+  - OrigDirection:   write
+  - OrigID:          entry.store.78
+  - ArrayName:       buffer
+  - String:          ' '
+  - BundleName:      BUFFER
+  - String:          ' '
+  - Function:        'echo_effect(float, float*, float, float, int, float volatile*, int*)'
+    DebugLoc:        { File: echo.cpp, Line: 2, Column: 0 }
+  - String:          ' '
+...

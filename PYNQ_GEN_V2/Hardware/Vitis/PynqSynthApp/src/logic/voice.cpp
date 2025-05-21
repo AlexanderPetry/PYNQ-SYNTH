@@ -1,4 +1,5 @@
 #include "voice.hpp"
+#include <math.h>
 
 void voice::play() {
     env.state = EnvState::Attack;
@@ -23,6 +24,11 @@ bool voice::isActive() const {
 	return env.state != EnvState::Idle;//return active;
 }
 
+
+float softclip1(float x, float drive = 2.0f) {
+    return tanhf(drive * x);
+}
+
 float voice::nextSample(float globalPhase, float baseFreq) {
 	if (env.state == EnvState::Idle) return 0.0f;
 
@@ -30,6 +36,7 @@ float voice::nextSample(float globalPhase, float baseFreq) {
     for (auto& s : signals) {
         sum += s.nextSample( globalPhase,  baseFreq);
     }
+    sum = softclip1(sum);
     return sum* env.amplitude;
 }
 

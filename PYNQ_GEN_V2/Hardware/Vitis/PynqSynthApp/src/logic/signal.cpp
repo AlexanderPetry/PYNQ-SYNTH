@@ -3,6 +3,8 @@
 #include "arm_math.h"
 #include "xil_printf.h"
 
+#include <cstdlib>
+
 #ifndef M_PI
 static constexpr float M_PI = 3.14159265358979323846f;
 #endif
@@ -10,7 +12,12 @@ static constexpr float M_PI = 3.14159265358979323846f;
 signal::signal(Type type, float frequency, float amplitude)
     : type(type), frequency(frequency), amplitude(amplitude)
 {
-	xil_printf("freq: %i at Ampl: %i\r\n", (int)frequency), (int)(amplitude);
+	float jitter = ((rand() % 2001) - 1000) / 100000.0f;
+	this->frequency = frequency * (1.0f + jitter);
+
+	this->phase = ((float)(rand() % 10000) / 10000.0f) * 2.0f * M_PI;
+
+	xil_printf("freq: %i at Ampl: %i\r\n", (int)this->frequency, (int)(amplitude));
 }
 
 void signal::setFrequency(float freq) {

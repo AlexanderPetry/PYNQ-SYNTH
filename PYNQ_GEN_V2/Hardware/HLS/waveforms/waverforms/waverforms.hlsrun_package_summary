@@ -1,0 +1,159 @@
+<ENTRY>
+{
+ "thisFile": "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms\\waverforms\\waverforms.hlsrun_package_summary",
+ "connectId": "",
+ "serverToken": "",
+ "timestamp": "0"
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_CmdStep",
+ "dateTimestamp": "05/21/25 18:36:31",
+ "timestampMillis": "4088669626",
+ "buildStep": {
+  "cmdId": "7549e685-f347-487b-8af7-5142b051155e",
+  "name": "vitis-run",
+  "logFile": "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms\\waverforms\\logs\\waverforms.steps.log",
+  "commandLine": "C:/Xilinx/Vitis/2024.1/bin/unwrapped/win64.o/vitis-run.exe  --mode hls --package --config C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms\\hls_config.cfg --work_dir waverforms ",
+  "args": [
+   "--mode",
+   "hls",
+   "--package",
+   "--config",
+   "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms\\hls_config.cfg",
+   "--work_dir",
+   "waverforms"
+  ],
+  "iniFiles": [],
+  "cwd": "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "05/21/25 18:36:31",
+ "timestampMillis": "4088669628",
+ "status": {
+  "cmdId": "7549e685-f347-487b-8af7-5142b051155e",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_FlowMetaData",
+ "dateTimestamp": "05/21/25 18:36:44",
+ "timestampMillis": "4088681966",
+ "buildSummary": {
+  "hardwarePlatform": "",
+  "hardwareDsa": "",
+  "platformDirectory": "",
+  "runtime": "",
+  "systemConfig": "",
+  "flow": "BF_RUN",
+  "target": "TT_HLS_IP",
+  "kernels": [
+   {
+    "base": {
+     "type": "KERNEL",
+     "name": "waverforms",
+     "file": "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms\\waverforms\\waverforms.zip",
+     "reports": [],
+     "uuid": ""
+    },
+    "sources": [
+     "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms\\waveforms.cpp"
+    ],
+    "psSources": [],
+    "cuNames": [],
+    "type": "HLS",
+    "frequency": 0,
+    "freqUnits": ""
+   }
+  ],
+  "toolVersion": "2024.1"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "05/21/25 18:36:44",
+ "timestampMillis": "4088681971",
+ "buildStep": {
+  "cmdId": "d2c37658-7931-4fb2-b7f3-380fd20ec089",
+  "name": "export_design",
+  "logFile": "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms\\waverforms\\hls\\hls.log",
+  "commandLine": "export_design -flow none",
+  "args": [
+   "-flow",
+   "none"
+  ],
+  "iniFiles": [],
+  "cwd": "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\waveforms"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "05/21/25 18:36:44",
+ "timestampMillis": "4088681973",
+ "status": {
+  "cmdId": "d2c37658-7931-4fb2-b7f3-380fd20ec089",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "05/21/25 18:38:42",
+ "timestampMillis": "4088799933",
+ "status": {
+  "cmdId": "d2c37658-7931-4fb2-b7f3-380fd20ec089",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "05/21/25 18:38:42",
+ "timestampMillis": "4088800290",
+ "status": {
+  "cmdId": "7549e685-f347-487b-8af7-5142b051155e",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "05/21/25 18:38:42",
+ "timestampMillis": "4088800292",
+ "report": {
+  "path": "",
+  "name": "",
+  "fileType": "HTML",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "05/21/25 18:38:42",
+ "timestampMillis": "4088800293",
+ "report": {
+  "path": "",
+  "name": "",
+  "fileType": "BINARY_PROTOBUF",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE",
+  "cmdId": ""
+ }
+}
+</ENTRY>

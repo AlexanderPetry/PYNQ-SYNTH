@@ -1,4 +1,9 @@
 {
   "workspaceRoot": "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS",
-  "mapping": {}
+  "mapping": {
+    "echo\\echo.cpp": "echo",
+    "waveforms\\waveforms.cpp": "waveforms",
+    "mixer\\mixer.cpp": "mixer",
+    "filters\\filter.cpp": "filters"
+  }
 }

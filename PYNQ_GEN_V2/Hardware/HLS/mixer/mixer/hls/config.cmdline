@@ -1,0 +1,3 @@
+relativeroot=C:/Users/PatrickKenis/Documents/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/HLS/mixer
+original_argv=--mode hls --package --config C:\Users\PatrickKenis\Documents\PYNQ-SYNTH\PYNQ_GEN_V2\Hardware\HLS\mixer\hls_config.cfg --work_dir mixer 
+

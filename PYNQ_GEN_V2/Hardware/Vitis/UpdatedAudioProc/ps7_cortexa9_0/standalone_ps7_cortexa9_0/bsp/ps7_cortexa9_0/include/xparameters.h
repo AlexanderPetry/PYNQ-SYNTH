@@ -266,7 +266,14 @@
 #define XPAR_AUDIO_CODEC_CTRL_0_HIGHADDR 0x43C0FFFF
 
 
+/* Peripheral Definitions for peripheral ECHO_EFFECT_0 */
+#define XPAR_ECHO_EFFECT_0_S_AXI_CONTROL_BASEADDR 0x40010000
+#define XPAR_ECHO_EFFECT_0_S_AXI_CONTROL_HIGHADDR 0x4001FFFF
+
+
 /******************************************************************/
+
+
 
 
 

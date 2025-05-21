@@ -1,0 +1,42 @@
+{
+  "0": {
+    "basicblocks": 10,
+    "calls": "2 2 2 1",
+    "file": "waveforms.cpp",
+    "fileloc": 13,
+    "instructions": 71,
+    "loads": {
+      "G": 1
+    },
+    "name": "waverforms",
+    "stores": {
+      "G": 1,
+      "T": 2
+    },
+    "total_instructions": 939
+  },
+  "1": {
+    "basicblocks": 26,
+    "calls": "",
+    "file": "hls_asin_acos.h",
+    "fileloc": 55,
+    "instructions": 178,
+    "loads": {
+      "G": 1
+    },
+    "name": "generic_asin<float>",
+    "total_instructions": 178
+  },
+  "2": {
+    "basicblocks": 19,
+    "calls": "",
+    "file": "hls_hotbm.h",
+    "fileloc": 209,
+    "instructions": 230,
+    "loads": {
+      "G": 4
+    },
+    "name": "sin_or_cos<float>",
+    "total_instructions": 230
+  }
+}

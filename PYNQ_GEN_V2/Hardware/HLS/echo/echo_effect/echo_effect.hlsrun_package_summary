@@ -1,0 +1,159 @@
+<ENTRY>
+{
+ "thisFile": "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\echo_effect\\echo_effect.hlsrun_package_summary",
+ "connectId": "",
+ "serverToken": "",
+ "timestamp": "0"
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_CmdStep",
+ "dateTimestamp": "05/21/25 19:02:13",
+ "timestampMillis": "4090211681",
+ "buildStep": {
+  "cmdId": "baf179c4-a82b-4713-adf5-6e8ab5c5a8d2",
+  "name": "vitis-run",
+  "logFile": "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\echo_effect\\logs\\echo_effect.steps.log",
+  "commandLine": "C:/Xilinx/Vitis/2024.1/bin/unwrapped/win64.o/vitis-run.exe  --mode hls --package --config C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\hls_config.cfg --work_dir echo_effect ",
+  "args": [
+   "--mode",
+   "hls",
+   "--package",
+   "--config",
+   "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\hls_config.cfg",
+   "--work_dir",
+   "echo_effect"
+  ],
+  "iniFiles": [],
+  "cwd": "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "05/21/25 19:02:13",
+ "timestampMillis": "4090211682",
+ "status": {
+  "cmdId": "baf179c4-a82b-4713-adf5-6e8ab5c5a8d2",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_FlowMetaData",
+ "dateTimestamp": "05/21/25 19:02:17",
+ "timestampMillis": "4090215517",
+ "buildSummary": {
+  "hardwarePlatform": "",
+  "hardwareDsa": "",
+  "platformDirectory": "",
+  "runtime": "",
+  "systemConfig": "",
+  "flow": "BF_RUN",
+  "target": "TT_HLS_IP",
+  "kernels": [
+   {
+    "base": {
+     "type": "KERNEL",
+     "name": "echo_effect",
+     "file": "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\echo_effect\\echo_effect.zip",
+     "reports": [],
+     "uuid": ""
+    },
+    "sources": [
+     "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\echo.cpp"
+    ],
+    "psSources": [],
+    "cuNames": [],
+    "type": "HLS",
+    "frequency": 0,
+    "freqUnits": ""
+   }
+  ],
+  "toolVersion": "2024.1"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "05/21/25 19:02:17",
+ "timestampMillis": "4090215521",
+ "buildStep": {
+  "cmdId": "615a66c3-8f17-41fe-a7fe-ebc3e8d8f22f",
+  "name": "export_design",
+  "logFile": "C:/Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo\\echo_effect\\hls\\hls.log",
+  "commandLine": "export_design -flow none",
+  "args": [
+   "-flow",
+   "none"
+  ],
+  "iniFiles": [],
+  "cwd": "C:\\Users\\PatrickKenis\\Documents\\PYNQ-SYNTH\\PYNQ_GEN_V2\\Hardware\\HLS\\echo"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "05/21/25 19:02:17",
+ "timestampMillis": "4090215522",
+ "status": {
+  "cmdId": "615a66c3-8f17-41fe-a7fe-ebc3e8d8f22f",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "05/21/25 19:02:48",
+ "timestampMillis": "4090246731",
+ "status": {
+  "cmdId": "615a66c3-8f17-41fe-a7fe-ebc3e8d8f22f",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "05/21/25 19:02:49",
+ "timestampMillis": "4090246837",
+ "status": {
+  "cmdId": "baf179c4-a82b-4713-adf5-6e8ab5c5a8d2",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "05/21/25 19:02:49",
+ "timestampMillis": "4090246838",
+ "report": {
+  "path": "",
+  "name": "",
+  "fileType": "HTML",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "05/21/25 19:02:49",
+ "timestampMillis": "4090246838",
+ "report": {
+  "path": "",
+  "name": "",
+  "fileType": "BINARY_PROTOBUF",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE",
+  "cmdId": ""
+ }
+}
+</ENTRY>
