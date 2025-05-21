@@ -1,0 +1,27 @@
+enum EffectType { NONE, ECHO, TREMOLO };
+EffectType currentEffect = ECHO;
+
+
+//* ECHO effect *//
+static float echoBuffer[44100] = {0};
+static int echoIndex = 0;
+float echo(float sample)
+{
+
+    sample += 0.4f * echoBuffer[echoIndex];
+    echoBuffer[echoIndex] = sample;
+    echoIndex = (echoIndex + 1) % 44100;
+    return sample;
+}
+
+
+//*	TREMOLLO effect *//
+static float tremoloPhase = 0;
+float tremolo(float sample)
+{
+	tremoloPhase += 2.0f * M_PI * 5.0f / SAMPLE_RATE; // 5Hz
+	if (tremoloPhase > 2.0f * M_PI) tremoloPhase -= 2.0f * M_PI;
+	float lfo = 0.5f * (1.0f + sinf(tremoloPhase));
+	sample *= lfo;
+	return sample;
+}

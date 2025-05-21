@@ -1,0 +1,61 @@
+enum EffectType { NONE, ECHO, TREMOLO, DISTORTION, LOWPASS, BITCRUSH};
+EffectType currentEffect = NONE;
+
+
+//*********** ECHO effect **************//
+
+static float echoBuffer[44100] = {0};
+static int echoIndex = 0;
+float echo(float sample)
+{
+
+    sample += 0.4f * echoBuffer[echoIndex];
+    echoBuffer[echoIndex] = sample;
+    echoIndex = (echoIndex + 1) % 44100;
+    return sample;
+}
+
+
+//*********** TREMOLO effect **************//
+
+static float tremoloPhase = 0;
+float tremolo(float sample, int sampleRate, float freq = 5.0f)
+{
+	tremoloPhase += 2.0f * M_PI * freq / sampleRate; // 5Hz
+	if (tremoloPhase > 2.0f * M_PI) tremoloPhase -= 2.0f * M_PI;
+	float lfo = 0.5f * (1.0f + sinf(tremoloPhase));
+	sample *= lfo;
+	return sample;
+}
+
+//*********** DISTORTION effect **************//
+
+float distortion(float sample, float gain = 2.0f) {
+    return tanhf(gain * sample);
+}
+
+
+//*********** LOWPASS effect **************//
+
+float lowpass(float sample, float alpha = 0.1f) {
+    static float prev = 0.0f;
+    float filtered = alpha * sample + (1.0f - alpha) * prev;
+    prev = filtered;
+    return filtered;
+}
+
+
+//*********** BITCRUSH effect **************//
+
+float bitcrush(float sample, int bitDepth = 4, int downsampleRate = 4) {
+    static int count = 0;
+    static float held = 0.0f;
+
+    if (++count >= downsampleRate) {
+        count = 0;
+        float scale = powf(2, bitDepth - 1);
+        held = roundf(sample * scale) / scale;
+    }
+
+    return held;
+}

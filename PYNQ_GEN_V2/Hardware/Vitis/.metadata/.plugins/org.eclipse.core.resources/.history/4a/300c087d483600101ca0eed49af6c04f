@@ -1,0 +1,283 @@
+#include "platform.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include <vector>
+#include "voice.hpp"
+#include <stdio.h>
+#include <stdbool.h>
+#include "platform.h"
+
+#include "xil_printf.h"
+#include "xil_mmu.h"
+#include "xil_cache.h"
+
+#include "arm_math.h"
+#include "arm_const_structs.h"
+#include "xscutimer.h"
+#include "xscugic.h"
+#include "math.h"
+#include "xuartps.h"
+#include "xgpio.h"
+#include "audio.h"
+#include "utils.h"
+#include <memory>
+
+#include <map>
+#include <algorithm>
+
+#include "piano.hpp"
+#include "synth.hpp"
+#include "guitar.hpp"
+#include "organ.hpp"
+#include "custom.hpp"
+
+
+
+#define TIMER_DEVICE_ID      XPAR_XSCUTIMER_0_DEVICE_ID
+#define TIMER_IRPT_INTR      XPAR_SCUTIMER_INTR
+#define SAMPLE_RATE          48000
+#define UINT_SCALED_MAX_VALUE 0x7FFFFF
+#define INTC_DEVICE_ID		XPAR_SCUGIC_SINGLE_DEVICE_ID
+
+#define BASE_FREQUENCY 		1.0f
+
+XScuTimer Timer;
+XScuGic Intc;
+std::vector<std::unique_ptr<voice>> voices;
+std::unique_ptr<instrument> currentInstrument;
+
+static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
+static void Timer_ISR(void *CallBackRef);
+void PlayStartupTune();
+
+
+
+int main()
+{
+
+    init_platform();
+    Xil_SetTlbAttributes(0x40000000, 0x14de2);
+
+
+	XUartPs Uart_Ps;
+	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
+	XUartPs_CfgInitialize(&Uart_Ps, Config, Config->BaseAddress);
+	XUartPs_SetBaudRate(&Uart_Ps, 115200);
+	xil_printf("Ready for input\r\n");
+
+	IicConfig(XPAR_XIICPS_0_DEVICE_ID);
+	AudioPllConfig();
+	AudioConfigureJacks();
+	LineinLineoutConfig();
+
+    // Init timer
+	XScuTimer Scu_Timer;
+	XScuTimer_Config *Scu_ConfigPtr;
+	XScuGic IntcInstance;
+
+	Scu_ConfigPtr = XScuTimer_LookupConfig(XPAR_PS7_SCUTIMER_0_DEVICE_ID);
+	XScuTimer_CfgInitialize(&Scu_Timer, Scu_ConfigPtr, Scu_ConfigPtr->BaseAddr);
+	Timer_Intr_Setup(&IntcInstance, &Scu_Timer, XPS_SCU_TMR_INT_ID);
+	XScuTimer_LoadTimer(&Scu_Timer, (XPAR_PS7_CORTEXA9_0_CPU_CLK_FREQ_HZ / 2)/(SAMPLE_RATE));
+	XScuTimer_EnableAutoReload(&Scu_Timer);
+	XScuTimer_Start(&Scu_Timer);
+
+	std::map<int, voice*> activeVoices;
+	currentInstrument = std::make_unique<piano>();
+
+	PlayStartupTune();
+
+	signal::Type cu_instrument_wave = signal::SINE;
+	voice::Envelope cu_instrument_env = voice::Envelope{0.01f, 0.2f, 0.0f, 0.4f};
+
+	uint8_t midiMsg[3];
+	int midiState = 0;
+
+	while (1) {
+	    uint8_t byte;
+	    if (XUartPs_Recv(&Uart_Ps, &byte, 1) == 1) {
+	        if (byte & 0x80) {
+	            if ((byte & 0xF0) == 0x90 || (byte & 0xF0) == 0x80 || (byte & 0xF0) == 0xB0) {
+	                midiMsg[0] = byte;
+	                midiState = 1;
+	            } else {
+	                midiState = 0;
+	            }
+	        } else {
+	            if (midiState == 1) {
+	                midiMsg[1] = byte;
+	                midiState = 2;
+	            } else if (midiState == 2) {
+	                midiMsg[2] = byte;
+	                midiState = 0;
+
+	                uint8_t status = midiMsg[0] & 0xF0;
+	                uint8_t data1 = midiMsg[1];
+	                uint8_t data2 = midiMsg[2];
+
+	                if (status == 0x90 && data2 > 0)
+	                {
+	                    if (auto* c = dynamic_cast<custom*>(currentInstrument.get())) {
+	                        c->updateParams(cu_instrument_wave, cu_instrument_env.attackTime, cu_instrument_env.decayTime, cu_instrument_env.sustainLevel, cu_instrument_env.releaseTime);
+	                    }
+	                    voices.emplace_back(std::make_unique<voice>(currentInstrument->createVoice(data1, data2)));
+	                    activeVoices[data1] = voices.back().get();
+	                }
+	                else if (status == 0x80 || (status == 0x90 && data2 == 0))
+	                {
+	                    auto it = activeVoices.find(data1);
+	                    if (it != activeVoices.end()) {
+	                        it->second->stop();
+	                    }
+	                }
+	                else if (status == 0xB0 && data1 == 0x00)
+	                {
+	                    switch (data2)
+	                    {
+	                        case 0: currentInstrument = std::make_unique<piano>(); break;
+	                        case 1: currentInstrument = std::make_unique<synth>(); break;
+	                        case 2: currentInstrument = std::make_unique<organ>(); break;
+	                        case 3: currentInstrument = std::make_unique<guitar>(); break;
+	                        case 4: currentInstrument = std::make_unique<custom>(); break;
+	                        default: break;
+	                    }
+	                    xil_printf("Instrument changed to ID %d\r\n", data2);
+	                }
+	                else if (status == 0xB0 && data1 == 0x10) {
+	                    signal::Type wave;
+	                    switch (data2) {
+	                        case 0: wave = signal::SINE; break;
+	                        case 1: wave = signal::SQUARE; break;
+	                        case 2: wave = signal::SAW; break;
+	                        case 3: wave = signal::TRIANGLE; break;
+	                        default: break;
+	                    }
+	                    cu_instrument_wave = wave;
+	                    xil_printf("Custom wave changed to ID %d\r\n", data2);
+	                }
+	                else if (status == 0xB0 && data1 == 0x11) {
+	                    cu_instrument_env.attackTime = (float)data2/100;
+	                    xil_printf("Custom attack set to %d\r\n", data2);
+	                }
+	                else if (status == 0xB0 && data1 == 0x12) {
+	                    cu_instrument_env.decayTime = (float)data2/100;
+	                    xil_printf("Custom decay set to %d\r\n", data2);
+	                }
+	                else if (status == 0xB0 && data1 == 0x13) {
+	                    cu_instrument_env.sustainLevel = (float)data2/100;
+	                    xil_printf("Custom sustain set to %d\r\n", data2);
+	                }
+	                else if (status == 0xB0 && data1 == 0x14) {
+	                    cu_instrument_env.releaseTime = (float)data2/100;
+	                    xil_printf("Custom release set to %d\r\n", data2);
+	                }
+	            }
+	        }
+	    }
+	    usleep(1000);
+	}
+
+
+    cleanup_platform();
+    return 0;
+}
+
+enum EffectType { NONE, ECHO, TREMOLO };
+EffectType currentEffect = ECHO;
+
+
+//* ECHO effect *//
+static float echoBuffer[44100] = {0};
+static int echoIndex = 0;
+float echo(float sample)
+{
+
+    sample += 0.4f * echoBuffer[echoIndex];
+    echoBuffer[echoIndex] = sample;
+    echoIndex = (echoIndex + 1) % 44100;
+    return sample;
+}
+
+
+//*	TREMOLLO effect *//
+static float tremoloPhase = 0;
+float tremolo(float sample)
+{
+	tremoloPhase += 2.0f * M_PI * 5.0f / SAMPLE_RATE; // 5Hz
+	if (tremoloPhase > 2.0f * M_PI) tremoloPhase -= 2.0f * M_PI;
+	float lfo = 0.5f * (1.0f + sinf(tremoloPhase));
+	sample *= lfo;
+	return sample;
+}
+
+
+static void Timer_ISR(void *CallBackRef)
+{
+
+	float deltaTime = 1.0f / SAMPLE_RATE;
+	static float globalPhase = 0.0f;
+	globalPhase += 2.0f * M_PI * BASE_FREQUENCY / SAMPLE_RATE ;
+	if (globalPhase >= 2.0f * M_PI) globalPhase -= 2.0f * M_PI;
+
+	float sample = 0.0f;
+	for (auto& ptr : voices) {
+		voice& v = *ptr;
+	    if (v.isActive()){
+	    	v.updateEnvelope(deltaTime);
+	        sample += v.nextSample(globalPhase, BASE_FREQUENCY);
+	    }
+	}
+
+	voices.erase(
+	    std::remove_if(voices.begin(), voices.end(),
+	        [](const std::unique_ptr<voice>& v) { return !v->isActive(); }),
+	    voices.end()
+	);
+	int voiceCount = voices.size();
+
+	//if (voiceCount > 0) sample /= voiceCount;
+
+	switch (currentEffect)
+	{
+	    case NONE:break;
+	    case ECHO: sample = echo(sample);break;
+	    case TREMOLO: sample tremolo(sample);break;
+
+	}
+
+	sample = fmaxf(fminf(sample, +1.0f), -1.0f);
+	uint32_t scaled = static_cast<uint32_t>(((sample))* UINT_SCALED_MAX_VALUE);
+	Xil_Out32(I2S_DATA_TX_L_REG, scaled);
+	Xil_Out32(I2S_DATA_TX_R_REG, scaled);
+
+}
+
+
+
+static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId)
+{
+	XScuGic_Config *IntcConfig;
+	IntcConfig = XScuGic_LookupConfig(INTC_DEVICE_ID);
+	XScuGic_CfgInitialize(IntcInstancePtr, IntcConfig, IntcConfig->CpuBaseAddress);
+	Xil_ExceptionInit();
+	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler,IntcInstancePtr);
+	XScuGic_Connect(IntcInstancePtr, TimerIntrId, (Xil_ExceptionHandler)Timer_ISR, (void *)TimerInstancePtr);
+	XScuGic_Enable(IntcInstancePtr, TimerIntrId);
+	XScuTimer_EnableInterrupt(TimerInstancePtr);
+	Xil_ExceptionEnable();
+	return XST_SUCCESS;
+}
+
+
+void PlayStartupTune() {
+    int melody[] = {76, 79, 83, 81}; // E-G-B-A
+    int durations[] = {300, 300, 400, 500}; // in ms
+    int length = sizeof(melody) / sizeof(melody[0]);
+
+    for (int i = 0; i < length; ++i) {
+        voices.emplace_back(std::make_unique<voice>(currentInstrument->createVoice(melody[i], 100)));
+        usleep(durations[i] * 1000);
+        voices.back()->stop();
+        voices.clear();
+    }
+}

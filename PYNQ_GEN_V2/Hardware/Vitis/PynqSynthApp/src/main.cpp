@@ -31,6 +31,7 @@
 #include "organ.hpp"
 #include "custom.hpp"
 
+#include "effects.hpp"
 
 
 #define TIMER_DEVICE_ID      XPAR_XSCUTIMER_0_DEVICE_ID
@@ -44,9 +45,11 @@
 XScuTimer Timer;
 XScuGic Intc;
 std::vector<std::unique_ptr<voice>> voices;
+std::unique_ptr<instrument> currentInstrument;
 
 static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstancePtr, u16 TimerIntrId);
 static void Timer_ISR(void *CallBackRef);
+void PlayStartupTune();
 
 
 
@@ -81,7 +84,9 @@ int main()
 	XScuTimer_Start(&Scu_Timer);
 
 	std::map<int, voice*> activeVoices;
-	std::unique_ptr<instrument> currentInstrument = std::make_unique<piano>();
+	currentInstrument = std::make_unique<piano>();
+
+	PlayStartupTune();
 
 	signal::Type cu_instrument_wave = signal::SINE;
 	voice::Envelope cu_instrument_env = voice::Envelope{0.01f, 0.2f, 0.0f, 0.4f};
@@ -167,6 +172,10 @@ int main()
 	                    cu_instrument_env.releaseTime = (float)data2/100;
 	                    xil_printf("Custom release set to %d\r\n", data2);
 	                }
+	                else if (status == 0xB0 && data1 == 0x15) {
+	                	currentEffect = (EffectType)data2;
+						xil_printf("current effect set to %d\r\n", data2);
+					}
 	            }
 	        }
 	    }
@@ -177,9 +186,6 @@ int main()
     cleanup_platform();
     return 0;
 }
-
-
-
 
 static void Timer_ISR(void *CallBackRef)
 {
@@ -203,9 +209,22 @@ static void Timer_ISR(void *CallBackRef)
 	        [](const std::unique_ptr<voice>& v) { return !v->isActive(); }),
 	    voices.end()
 	);
-	int voiceCount = voices.size();
+	//int voiceCount = voices.size();
+	//if (voiceCount > 0) sample /= voiceCount;
 
-	if (voiceCount > 0) sample /= voiceCount;
+	//currentEffect = TREMOLO;
+
+	switch (currentEffect)
+	{
+	    case NONE:break;
+	    case ECHO: sample = echo(sample); break;
+	    case TREMOLO: sample =tremolo(sample, SAMPLE_RATE); break;
+	    case DISTORTION: sample = distortion(sample); break;
+	    case LOWPASS: sample = lowpass(sample); break;
+	    case BITCRUSH: sample = bitcrush(sample); break;
+	    case REVERB: sample = reverb(sample); break;
+
+	}
 
 	sample = fmaxf(fminf(sample, +1.0f), -1.0f);
 	uint32_t scaled = static_cast<uint32_t>(((sample))* UINT_SCALED_MAX_VALUE);
@@ -228,4 +247,18 @@ static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstanceP
 	XScuTimer_EnableInterrupt(TimerInstancePtr);
 	Xil_ExceptionEnable();
 	return XST_SUCCESS;
+}
+
+
+void PlayStartupTune() {
+    int melody[] = {76, 79, 83, 81}; // E-G-B-A
+    int durations[] = {300, 300, 400, 500}; // in ms
+    int length = sizeof(melody) / sizeof(melody[0]);
+
+    for (int i = 0; i < length; ++i) {
+        voices.emplace_back(std::make_unique<voice>(currentInstrument->createVoice(melody[i], 100)));
+        usleep(durations[i] * 1000);
+        voices.back()->stop();
+        voices.clear();
+    }
 }
