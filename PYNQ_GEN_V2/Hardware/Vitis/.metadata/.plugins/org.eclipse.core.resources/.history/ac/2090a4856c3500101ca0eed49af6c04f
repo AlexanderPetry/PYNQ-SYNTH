@@ -1,0 +1,81 @@
+#include "xgpio.h"
+#include "xparameters.h"
+#include <unistd.h> // for usleep
+
+class LCD {
+private:
+    XGpio gpio;
+    u32 device_id;
+    u32 channel;
+    u32 rs, en, d4, d5, d6, d7;
+
+    void pulseEnable() {
+        writePin(en, 0);
+        usleep(1);
+        writePin(en, 1);
+        usleep(1);
+        writePin(en, 0);
+        usleep(100);
+    }
+
+    void sendNibble(u8 nibble) {
+        writePin(d4, (nibble >> 0) & 1);
+        writePin(d5, (nibble >> 1) & 1);
+        writePin(d6, (nibble >> 2) & 1);
+        writePin(d7, (nibble >> 3) & 1);
+        pulseEnable();
+    }
+
+    void sendByte(u8 value, bool isData) {
+        writePin(rs, isData);
+        sendNibble(value >> 4);
+        sendNibble(value & 0x0F);
+        usleep(100);
+    }
+
+    void writePin(u32 pin, bool value) {
+        u32 out = XGpio_DiscreteRead(&gpio, channel);
+        if (value) out |= (1 << pin);
+        else       out &= ~(1 << pin);
+        XGpio_DiscreteWrite(&gpio, channel, out);
+    }
+
+public:
+    LCD(u32 dev_id, u32 chan, u32 rs, u32 en, u32 d4, u32 d5, u32 d6, u32 d7)
+        : device_id(dev_id), channel(chan),
+          rs(rs), en(en), d4(d4), d5(d5), d6(d6), d7(d7) {}
+
+    void begin() {
+        XGpio_Initialize(&gpio, device_id);
+        XGpio_SetDataDirection(&gpio, channel, 0x00);
+
+        usleep(50000);
+        sendNibble(0x03); usleep(5000);
+        sendNibble(0x03); usleep(5000);
+        sendNibble(0x03); usleep(5000);
+        sendNibble(0x02); usleep(5000);
+
+        command(0x28); // 4-bit mode, 2 lines
+        command(0x0C); // Display ON
+        command(0x06); // Entry mode
+        command(0x01); // Clear display
+        usleep(2000);
+    }
+
+    void command(u8 cmd) {
+        sendByte(cmd, false);
+    }
+
+    void write(u8 data) {
+        sendByte(data, true);
+    }
+
+    void print(const char* str) {
+        while (*str) write(*str++);
+    }
+
+    void setCursor(u8 row, u8 col) {
+        static const u8 row_offsets[] = {0x00, 0x40};
+        command(0x80 | (col + row_offsets[row]));
+    }
+};

@@ -1,0 +1,7 @@
+//arch = zynq; split = false; format = BIN
+the_ROM_image:
+{
+	[bootloader]C:\Users\PatrickKenis\Documents\PYNQ-SYNTH\PYNQ_GEN_V2\Hardware\Vitis\FSBLApp\Debug\FSBLApp.elf
+	C:\Users\PatrickKenis\Documents\PYNQ-SYNTH\PYNQ_GEN_V2\Hardware\Vivado\BitStreamV2.bit
+	C:\Users\PatrickKenis\Documents\PYNQ-SYNTH\PYNQ_GEN_V2\Hardware\Vitis\PynqSynthApp\Debug\PynqSynthApp.elf
+}

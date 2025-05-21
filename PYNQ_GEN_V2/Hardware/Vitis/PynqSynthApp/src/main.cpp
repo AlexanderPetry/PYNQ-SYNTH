@@ -29,6 +29,8 @@
 #include "synth.hpp"
 #include "guitar.hpp"
 #include "organ.hpp"
+#include "custom.hpp"
+
 
 
 #define TIMER_DEVICE_ID      XPAR_XSCUTIMER_0_DEVICE_ID
@@ -47,11 +49,13 @@ static int Timer_Intr_Setup(XScuGic * IntcInstancePtr, XScuTimer *TimerInstanceP
 static void Timer_ISR(void *CallBackRef);
 
 
+
 int main()
 {
 
     init_platform();
     Xil_SetTlbAttributes(0x40000000, 0x14de2);
+
 
 	XUartPs Uart_Ps;
 	XUartPs_Config *Config = XUartPs_LookupConfig(XPAR_XUARTPS_0_DEVICE_ID);
@@ -135,28 +139,34 @@ int main()
 	                    }
 	                    xil_printf("Instrument changed to ID %d\r\n", data2);
 	                }
-	                else if (status == 0x12 && data1 == 0x00)
-	                {
-	                	signal::Type wave;
-	                	switch (data2)
-	                	{
-	                	case 0: wave signal::SINE;
-	                	case 0: wave signal::SQUARE;
-	                	case 0: wave signal::SAW;
-	                	case 0: wave signal::TRIANGLE;
-	                	}
-	                	cu_instrument_wave = wave;
+	                else if (status == 0xB0 && data1 == 0x10) {
+	                    signal::Type wave;
+	                    switch (data2) {
+	                        case 0: wave = signal::SINE; break;
+	                        case 1: wave = signal::SQUARE; break;
+	                        case 2: wave = signal::SAW; break;
+	                        case 3: wave = signal::TRIANGLE; break;
+	                        default: break;
+	                    }
+	                    cu_instrument_wave = wave;
+	                    xil_printf("Custom wave changed to ID %d\r\n", data2);
 	                }
-	                else if (status == 0x15)
-	                {
-	                	cu_instrument_env.attackTime = data1;
-	                	cu_instrument_env.decayTime = data2;
+	                else if (status == 0xB0 && data1 == 0x11) {
+	                    cu_instrument_env.attackTime = (float)data2/100;
+	                    xil_printf("Custom attack set to %d\r\n", data2);
 	                }
-	                else if (status == 0x20)
-					{
-						cu_instrument_env.sustainLevel = data1;
-						cu_instrument_env.releaseTime = data2;
-					}
+	                else if (status == 0xB0 && data1 == 0x12) {
+	                    cu_instrument_env.decayTime = (float)data2/100;
+	                    xil_printf("Custom decay set to %d\r\n", data2);
+	                }
+	                else if (status == 0xB0 && data1 == 0x13) {
+	                    cu_instrument_env.sustainLevel = (float)data2/100;
+	                    xil_printf("Custom sustain set to %d\r\n", data2);
+	                }
+	                else if (status == 0xB0 && data1 == 0x14) {
+	                    cu_instrument_env.releaseTime = (float)data2/100;
+	                    xil_printf("Custom release set to %d\r\n", data2);
+	                }
 	            }
 	        }
 	    }
@@ -193,9 +203,9 @@ static void Timer_ISR(void *CallBackRef)
 	        [](const std::unique_ptr<voice>& v) { return !v->isActive(); }),
 	    voices.end()
 	);
-	//int voiceCount = voices.size();
+	int voiceCount = voices.size();
 
-	//if (voiceCount > 0) sample /= voiceCount;
+	if (voiceCount > 0) sample /= voiceCount;
 
 	sample = fmaxf(fminf(sample, +1.0f), -1.0f);
 	uint32_t scaled = static_cast<uint32_t>(((sample))* UINT_SCALED_MAX_VALUE);

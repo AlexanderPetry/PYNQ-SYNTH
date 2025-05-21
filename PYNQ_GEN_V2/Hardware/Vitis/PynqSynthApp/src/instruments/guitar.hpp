@@ -1,0 +1,18 @@
+#include "instrument.hpp"
+#include "voice.hpp"
+
+class guitar : public instrument {
+public:
+    guitar() = default;
+    voice createVoice(uint8_t note, uint8_t velocity) const override {
+        float freq = MIDI::ToFreq(note);
+        float amp = velocity / 127.0f;
+
+        voice v;
+        v.addSignal(signal(signal::TRIANGLE, freq,     0.6f * amp));
+        v.addSignal(signal(signal::SINE,     freq * 2, 0.2f * amp));
+        v.env = voice::Envelope{0.005f, 0.10f, 0.0f, 0.9f}; // Plucked
+        v.play();
+        return v;
+    }
+};

@@ -1,0 +1,70 @@
+#include "xgpio.h"
+#include <unistd.h>
+
+class EInkDisplay {
+private:
+    XGpio gpio;
+    u32 out_channel = 1;  // Output bits: SDI, SCLK, CS, DC, RES
+    u32 in_channel  = 2;  // Input bit: BUSY
+
+    enum Pins { SDI = 0, SCLK = 1, CS = 2, DC = 3, RES = 4, BUSY = 5 };
+
+    void writePin(u32 bit, bool value) {
+        u32 out = XGpio_DiscreteRead(&gpio, out_channel);
+        if (value) out |= (1 << bit);
+        else       out &= ~(1 << bit);
+        XGpio_DiscreteWrite(&gpio, out_channel, out);
+    }
+
+    bool readBusy() {
+        return XGpio_DiscreteRead(&gpio, in_channel) & (1 << BUSY);
+    }
+
+    void spiWriteByte(u8 data) {
+        for (int i = 7; i >= 0; i--) {
+            writePin(SDI, (data >> i) & 1);
+            writePin(SCLK, 1);
+            usleep(1);
+            writePin(SCLK, 0);
+        }
+    }
+
+    void waitUntilIdle() {
+        while (readBusy()) usleep(1000);
+    }
+
+public:
+    EInkDisplay(u16 dev_id) {
+        XGpio_Initialize(&gpio, dev_id);
+        XGpio_SetDataDirection(&gpio, out_channel, 0x00);         // Output
+        XGpio_SetDataDirection(&gpio, in_channel, (1 << BUSY));   // Input
+    }
+
+    void reset() {
+        writePin(RES, 0); usleep(200000);
+        writePin(RES, 1); usleep(200000);
+    }
+
+    void sendCommand(u8 cmd) {
+        writePin(DC, 0);
+        writePin(CS, 0);
+        spiWriteByte(cmd);
+        writePin(CS, 1);
+    }
+
+    void sendData(u8 data) {
+        writePin(DC, 1);
+        writePin(CS, 0);
+        spiWriteByte(data);
+        writePin(CS, 1);
+    }
+
+    void init() {
+        reset();
+        waitUntilIdle();
+        // Send initialization commands per your e-ink datasheet
+        sendCommand(0x01); // Example: Power setting
+        sendData(0x03); sendData(0x00); sendData(0x2B); sendData(0x2B);
+        // Add the rest of your display-specific init sequence here
+    }
+};

@@ -51,3 +51,4 @@ platform generate
 domain active {zynq_fsbl}
 bsp reload
 platform generate -domains standalone_ps7_cortexa9_0,zynq_fsbl 
+platform generate -domains standalone_ps7_cortexa9_0,zynq_fsbl 

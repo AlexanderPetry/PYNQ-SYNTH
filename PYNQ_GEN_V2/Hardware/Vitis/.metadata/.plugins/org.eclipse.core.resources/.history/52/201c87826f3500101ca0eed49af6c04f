@@ -1,0 +1,104 @@
+#include "xgpio.h"
+#include <unistd.h>
+
+class EInkDisplay {
+private:
+    XGpio gpio;
+    u32 out_channel = 1;  // Output bits: SDI, SCLK, CS, DC, RES
+    u32 in_channel  = 2;  // Input bit: BUSY
+
+    enum Pins { SDI = 0, SCLK = 1, CS = 2, DC = 3, RES = 4, BUSY = 5 };
+
+    void writePin(u32 bit, bool value) {
+        u32 out = XGpio_DiscreteRead(&gpio, out_channel);
+        if (value) out |= (1 << bit);
+        else       out &= ~(1 << bit);
+        XGpio_DiscreteWrite(&gpio, out_channel, out);
+    }
+
+    bool readBusy() {
+        return XGpio_DiscreteRead(&gpio, in_channel) & (1 << BUSY);
+    }
+
+    void spiWriteByte(u8 data) {
+        for (int i = 7; i >= 0; i--) {
+            writePin(SDI, (data >> i) & 1);
+            writePin(SCLK, 1);
+            usleep(1);
+            writePin(SCLK, 0);
+        }
+    }
+
+    void waitUntilIdle() {
+        while (readBusy()) usleep(1000);
+    }
+
+public:
+    EInkDisplay(u16 dev_id) {
+        XGpio_Initialize(&gpio, dev_id);
+        XGpio_SetDataDirection(&gpio, out_channel, 0x00);         // Output
+        XGpio_SetDataDirection(&gpio, in_channel, (1 << BUSY));   // Input
+    }
+
+    void reset() {
+        writePin(RES, 0); usleep(200000);
+        writePin(RES, 1); usleep(200000);
+    }
+
+    void sendCommand(u8 cmd) {
+        writePin(DC, 0);
+        writePin(CS, 0);
+        spiWriteByte(cmd);
+        writePin(CS, 1);
+    }
+
+    void sendData(u8 data) {
+        writePin(DC, 1);
+        writePin(CS, 0);
+        spiWriteByte(data);
+        writePin(CS, 1);
+    }
+
+    void init() {
+		reset();
+		waitUntilIdle();
+
+		sendCommand(0x01); // POWER_SETTING
+		sendData(0x03);    // VDS_EN, VDG_EN
+		sendData(0x00);    // VCOM_HV, VGHL_LV[1], VGHL_LV[0]
+		sendData(0x2B);    // VDH
+		sendData(0x2B);    // VDL
+		sendData(0x09);    // VDHR
+
+		sendCommand(0x06); // BOOSTER_SOFT_START
+		sendData(0x07);
+		sendData(0x07);
+		sendData(0x17);
+
+		sendCommand(0x04); // POWER_ON
+		waitUntilIdle();
+
+		sendCommand(0x00); // PANEL_SETTING
+		sendData(0xAF);    // KW-BF, BW-R
+
+		sendCommand(0x50); // VCOM_AND_DATA_INTERVAL_SETTING
+		sendData(0x77);    // VBDF, D7=1: enable SRAM
+
+		sendCommand(0x61); // TCON_RESOLUTION
+		sendData(0x28);    // 296px
+		sendData(0x01);    //
+		sendData(0x80);    // 128px
+
+		sendCommand(0x30); // PLL_CONTROL
+		sendData(0x39);    // 3A = 150Hz, 39 = 100Hz
+
+		sendCommand(0x82); // VCM_DC_SETTING
+		sendData(0x12);
+
+		sendCommand(0x20); // Use LUT from chip
+
+		waitUntilIdle();
+    	}
+
+    }
+};

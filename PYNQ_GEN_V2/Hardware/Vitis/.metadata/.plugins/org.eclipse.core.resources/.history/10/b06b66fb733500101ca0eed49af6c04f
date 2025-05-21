@@ -1,0 +1,92 @@
+#include "xgpio.h"
+#include "sleep.h"
+
+class EInkDisplay {
+private:
+    XGpio gpio;
+    u32 channel = 2; // Using only GPIO2 of axi_gpio_0
+
+    enum Pins { SDI = 0, SCLK = 1, CS = 2, DC = 3, RES = 4 };
+
+    void writePin(u32 bit, bool value) {
+        u32 out = XGpio_DiscreteRead(&gpio, channel);
+        if (value) out |= (1 << bit);
+        else       out &= ~(1 << bit);
+        XGpio_DiscreteWrite(&gpio, channel, out);
+    }
+
+    void spiWriteByte(u8 data) {
+        for (int i = 7; i >= 0; i--) {
+            writePin(SDI, (data >> i) & 1);
+            writePin(SCLK, 1);
+            usleep(1);
+            writePin(SCLK, 0);
+        }
+    }
+
+public:
+    EInkDisplay(u16 dev_id) {
+        XGpio_Initialize(&gpio, dev_id);
+        XGpio_SetDataDirection(&gpio, channel, 0x00); // All outputs
+
+        while(1)
+        {
+        	XGpio_DiscreteWrite(&gpio, 2, 0xFF); // All high
+        	usleep(1000000);
+        	XGpio_DiscreteWrite(&gpio, 2, 0x00); // All low
+        	usleep(1000000);
+        }
+
+    }
+
+    void reset() {
+        writePin(RES, 0); usleep(200000);
+        writePin(RES, 1); usleep(200000);
+    }
+
+    void sendCommand(u8 cmd) {
+        writePin(DC, 0);
+        writePin(CS, 0);
+        spiWriteByte(cmd);
+        writePin(CS, 1);
+    }
+
+    void sendData(u8 data) {
+        writePin(DC, 1);
+        writePin(CS, 0);
+        spiWriteByte(data);
+        writePin(CS, 1);
+    }
+
+    void init() {
+        reset();
+
+        sendCommand(0x01); // POWER_SETTING
+        sendData(0x03); sendData(0x00); sendData(0x2B); sendData(0x2B); sendData(0x09);
+
+        sendCommand(0x06); // BOOSTER_SOFT_START
+        sendData(0x07); sendData(0x07); sendData(0x17);
+
+        sendCommand(0x04); // POWER_ON
+        usleep(50000);     // Wait instead of BUSY
+
+        sendCommand(0x00); // PANEL_SETTING
+        sendData(0xAF);
+
+        sendCommand(0x50); // VCOM_AND_DATA_INTERVAL_SETTING
+        sendData(0x77);
+
+        sendCommand(0x61); // TCON_RESOLUTION
+        sendData(0x28); sendData(0x01); sendData(0x80); // 296x128
+
+        sendCommand(0x30); // PLL_CONTROL
+        sendData(0x39);
+
+        sendCommand(0x82); // VCM_DC_SETTING
+        sendData(0x12);
+
+        sendCommand(0x20); // Use internal LUT
+
+        usleep(50000);     // Final wait in place of waitUntilIdle
+    }
+};
