@@ -10,7 +10,7 @@ PynqynthApp is a real-time audio synthesis and effects processing application ta
 - Timer-based interrupt-driven audio processing for stable sample rate
 
 ## Architecture
-- Input: MIDI commands received via UART from an external source (handled in another repo)
+- Input: MIDI commands received via UART from an [external source](https://github.com/AlexanderPetry/ZMQProject)
 - Audio processing: Voices generate samples, summed and processed with effects
 - Output: Audio data sent to I2S interface for DAC playback
 - Effect management: Selectable effects applied on mixed audio samples
