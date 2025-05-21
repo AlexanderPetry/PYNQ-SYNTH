@@ -1,0 +1,12 @@
+/* C:/Users/Oliwier/AppData/Local/Temp/bootgen_PynqPedalApp_system2038607478576594619/sd_card_temp/boot.bif */
+/* Command to create bitstream .bin file:       */
+/*   bootgen -image <bif_file> -split bin -w    */
+/* Command to create BOOT.BIN file:             */
+/*   bootgen  -image <bif_file> -w -o i BOOT.BIN */
+/*UpdatedAudioProc*/
+the_ROM_image:
+{
+ [bootloader] M:/projects/clones/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/UpdatedAudioProc/export/UpdatedAudioProc/sw/UpdatedAudioProc/boot/fsbl.elf
+ M:/projects/clones/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/PynqPedalApp/_ide/bitstream/UpdatedAudioProcV2.bit
+ M:/projects/clones/PYNQ-SYNTH/PYNQ_GEN_V2/Hardware/Vitis/PynqPedalApp/Debug/PynqPedalApp.elf
+}

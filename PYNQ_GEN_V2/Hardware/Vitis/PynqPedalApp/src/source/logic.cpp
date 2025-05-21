@@ -91,35 +91,63 @@ float_to_raw(float sample) {
 unsigned long
 Effects::perform(unsigned long audioIn){
 	float sample = raw_to_float(audioIn);
-	float delayed_sample = 0.0f;
 
+	// Read delayed sample
 	read_index = (buf_index + DELAY_BUF_SIZE - internal_delay_Vstr.delayidx) % DELAY_BUF_SIZE;
+	float delayed_sample = Sbuffer[read_index];
 
-	if (internal_delay_Vstr.delayidx > 0) {
-	    read_index = (buf_index + DELAY_BUF_SIZE - internal_delay_Vstr.delayidx) % DELAY_BUF_SIZE;
-	    delayed_sample = Sbuffer[read_index];
-	}else{
-		delayed_sample = sample;
-	}
+	//Echo = input + delayed * feedback
+	float echo_sample = sample + delayed_sample * internal_echo_Vstr.feedback;
 
-	float echo_sample = delayed_sample;
-	if (internal_echo_Vstr.feedback > 0.0f) {
-		echo_sample = sample + delayed_sample * internal_echo_Vstr.feedback;
-		Sbuffer[buf_index] = echo_sample;
-	} else {
-	    Sbuffer[buf_index] = sample;
-	}
+	// Store echo back into buffer
+	Sbuffer[buf_index] = sample + delayed_sample * internal_echo_Vstr.feedback;
 
-
+	// Advance buffer index
 	buf_index = (buf_index + 1) % DELAY_BUF_SIZE;
 
 	if (echo_sample > internal_distortion_Vstr.threshold) { echo_sample = internal_distortion_Vstr.threshold; }
 	else if (echo_sample < -internal_distortion_Vstr.threshold) { echo_sample = -internal_distortion_Vstr.threshold; }
-
+	// Output (scaled)
 	mixed = echo_sample * internal_gain_Vstr.gain;
 
 	return float_to_raw(mixed);
 }
+
+
+
+/*
+unsigned long
+Effects::perform(unsigned long audioIn){
+float sample = raw_to_float(audioIn);
+float delayed_sample = 0.0f;
+
+read_index = (buf_index + DELAY_BUF_SIZE - internal_delay_Vstr.delayidx) % DELAY_BUF_SIZE;
+
+if (internal_delay_Vstr.delayidx > 0) {
+    read_index = (buf_index + DELAY_BUF_SIZE - internal_delay_Vstr.delayidx) % DELAY_BUF_SIZE;
+    delayed_sample = Sbuffer[read_index];
+}else{
+	delayed_sample = sample;
+}
+
+float echo_sample = delayed_sample;
+if (internal_echo_Vstr.feedback > 0.f) {
+	echo_sample = sample + delayed_sample * internal_echo_Vstr.feedback;
+	Sbuffer[buf_index] = echo_sample;
+} else {
+    Sbuffer[buf_index] = sample;
+}
+
+buf_index = (buf_index + 1) % DELAY_BUF_SIZE;
+
+if (echo_sample > internal_distortion_Vstr.threshold) { echo_sample = internal_distortion_Vstr.threshold; }
+else if (echo_sample < -internal_distortion_Vstr.threshold) { echo_sample = -internal_distortion_Vstr.threshold; }
+
+mixed = echo_sample * internal_gain_Vstr.gain;
+
+return float_to_raw(mixed);
+}
+*/
 
 void
 echo_effect(float32_t sample, void* params){
@@ -149,7 +177,7 @@ echo_effect(float32_t sample, void* params){
 		    if (acc_feedback > 1.0f) acc_feedback = 1.0f;
 
 		    paramptr->feedback = acc_feedback;
-		    __CLEAR_SCREEN__ printf("Feedback = %f\r\n",acc_feedback);
+		    __CLEAR_SCREEN__ printf("Feedback = %f\r\n",paramptr->feedback);
 		}
 
 		btn_mask = 0;
